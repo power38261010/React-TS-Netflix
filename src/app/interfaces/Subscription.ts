@@ -1,4 +1,4 @@
 export interface Subscription {
   id: number;
-  Type?: string;
+  type?: string;
 }

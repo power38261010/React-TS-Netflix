@@ -33,6 +33,7 @@ const NavBar: React.FC = () => {
             <Link to="/pays" className={styles.navLink}>Pagos</Link>
             <Link to="/users" className={styles.navLink}>Usuarios</Link>
             <Link to="/movies" className={styles.navLink}>Películas</Link>
+            <Link to="/subscriptions" className={styles.navLink}>Subscripciones</Link>
           </>
         )}
         {profile?.role === 'client' && (

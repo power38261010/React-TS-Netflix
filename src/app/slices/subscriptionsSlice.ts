@@ -7,17 +7,12 @@ export const getAllSubscriptions = createAsyncThunk('subscriptions/getAllSubscri
   return subscriptionService.getAllSubscriptions();
 });
 
-// export const getSubscriptionById = createAsyncThunk('subscriptions/getSubscriptionById', async (id: number) => {
-//   return subscriptionService.getSubscriptionById(id);
-// });
-
 export const createSubscription = createAsyncThunk('subscriptions/createSubscription', async (subscription: Omit<Subscription, 'id'>) => {
-  return subscriptionService.createSubscription(subscription);
+  return await subscriptionService.createSubscription(subscription);
 });
 
 export const updateSubscription = createAsyncThunk('subscriptions/updateSubscription', async (subscription: Subscription) => {
-  await subscriptionService.updateSubscription(subscription.id, subscription);
-  return subscription;
+  return await subscriptionService.updateSubscription(subscription.id, subscription);
 });
 
 export const deleteSubscription = createAsyncThunk('subscriptions/deleteSubscription', async (id: number) => {

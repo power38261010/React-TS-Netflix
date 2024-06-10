@@ -7,6 +7,7 @@ import LoginForm from './components/Login/LoginForm';
 import MovieComponent from './components/Movie/MovieComponent';
 import PayComponent from './components/Pay/PayComponent';
 import UserComponent from './components/User/UserComponent';
+import SubscriptionComponent from './components/Subscription/SubscriptionComponent';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import Unauthorized from './components/Unauthorized';
@@ -28,6 +29,7 @@ const App: React.FC = () => {
               <Route path="/movies" element={<MovieComponent />} />
               <Route path="/pays" element={<PayComponent />} />
               <Route path="/users" element={<UserComponent />} />
+              <Route path="/subscriptions" element={<SubscriptionComponent />} />
             </Route>
             <Route element={<PrivateRoute roles={['client']} />}>
               <Route path="/dashboard" element={<Dashboard />} />

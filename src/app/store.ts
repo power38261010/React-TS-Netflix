@@ -2,6 +2,7 @@ import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import usersReducer from './slices/usersSlice';
 import moviesReducer from './slices/moviesSlice';
 import paysReducer from './slices/paysSlice';
+import subscriptionsReducer from './slices/subscriptionsSlice';
 import counterSlice from '../features/counter/counterSlice';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     users: usersReducer,
     movies: moviesReducer,
     pays: paysReducer,
+    subscriptions: subscriptionsReducer,
     counters: counterSlice,
   },
 });
