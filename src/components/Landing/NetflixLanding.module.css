@@ -1,0 +1,80 @@
+/* src/components/NetflixLanding/NetflixLanding.module.css */
+
+.netflixLanding {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: url('../../assets/backgroundLanding.jpg') no-repeat center center/cover;
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.logo img {
+  height: 50px;
+  margin-left: 50px;
+}
+
+.actions .signIn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-right: 50px;
+  font-size: medium;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.redeemSection {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.redeemSection h1 {
+  margin-bottom: 20px;
+}
+
+.redeemSection p {
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.inputGroup input {
+  padding: 10px;
+  flex: 1;
+}
+
+.inputGroup button {
+  padding: 10px 20px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: medium;
+}
+
+.footer {
+  padding: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+}

@@ -1,0 +1,73 @@
+// import React, { useEffect, useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { RootState } from '../../app/store'; // Ajusta la ruta según la estructura de tu proyecto
+// import {
+//   getAllSubscriptions,
+//   createSubscription,
+//   updateSubscription,
+//   deleteSubscription,
+//   Subscription,
+// } from '../../app/slices/subscriptionSlice';
+
+// const SubscriptionComponent: React.FC = () => {
+//   const dispatch = useDispatch();
+//   const { subscriptions, loading, error } = useSelector((state: RootState) => state.subscriptions);
+
+//   const [newSubscription, setNewSubscription] = useState<Omit<Subscription, 'id'>>({
+//     name: '',
+//     price: 0,
+//   });
+
+//   useEffect(() => {
+//     dispatch(getAllSubscriptions());
+//   }, [dispatch]);
+
+//   const handleCreateSubscription = () => {
+//     dispatch(createSubscription(newSubscription));
+//     setNewSubscription({ name: '', price: 0 });
+//   };
+
+//   const handleUpdateSubscription = (subscription: Subscription) => {
+//     dispatch(updateSubscription(subscription));
+//   };
+
+//   const handleDeleteSubscription = (id: number) => {
+//     dispatch(deleteSubscription(id));
+//   };
+
+//   return (
+//     <div>
+//       <h1>Subscriptions</h1>
+//       {loading && <p>Loading...</p>}
+//       {error && <p>Error: {error}</p>}
+//       <div>
+//         <h2>Add New Subscription</h2>
+//         <input
+//           type="text"
+//           placeholder="Name"
+//           value={newSubscription.name}
+//           onChange={(e) => setNewSubscription({ ...newSubscription, name: e.target.value })}
+//         />
+//         <input
+//           type="number"
+//           placeholder="Price"
+//           value={newSubscription.price}
+//           onChange={(e) => setNewSubscription({ ...newSubscription, price: parseFloat(e.target.value) })}
+//         />
+//         <button onClick={handleCreateSubscription}>Add Subscription</button>
+//       </div>
+//       <ul>
+//         {subscriptions.map((subscription) => (
+//           <li key={subscription.id}>
+//             <p>Name: {subscription.name}</p>
+//             <p>Price: {subscription.price}</p>
+//             <button onClick={() => handleUpdateSubscription(subscription)}>Update</button>
+//             <button onClick={() => handleDeleteSubscription(subscription.id)}>Delete</button>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default SubscriptionComponent;

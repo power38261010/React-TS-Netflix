@@ -1,0 +1,156 @@
+// src/contexts/AuthContext.tsx
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import api from '../services/api';
+import { jwtDecode } from "jwt-decode";
+import {encryptProfile, decryptProfile} from './crypto/cryptoJS'
+
+const secret = process.env.REACT_APP_API_KEY;
+const audit = process.env.REACT_APP_API_AUD;
+
+export interface Profile {
+  id: number;
+  role: string;
+  username: string;
+  isPaid?: boolean;
+  subscriptionId?: number;
+  expirationDate?: Date;
+}
+
+interface AuthContextType {
+  profile: Profile | null;
+  token: string | null;
+  login: (username: string, password: string) => Promise<boolean>;
+  register: (username: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: () => boolean;
+  verifyTokenInServer: () => Promise<boolean>;
+}
+
+interface DecodedToken {
+  unique_name: string;
+  role: string;
+  nbf: number;
+  exp: number;
+  iat: number;
+  iss: string;
+  aud: string;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      const storedProfile = localStorage.getItem('profile');
+      if (storedProfile) {
+        setProfile(decryptProfile(storedProfile));
+      }
+    }
+  }, []);
+
+  const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const response = await api.post('/auth/login', { Username: username, PasswordHash: password });
+      let { token } = response.data;
+      let user = response.data.profile
+      if ( verifySign(token) ) {
+        setToken(token);
+        setProfile(user);
+        localStorage.setItem('token', token);
+        let encryptedProfile = encryptProfile (user)
+        localStorage.setItem('profile', encryptedProfile);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error en login:', error);
+      return false;
+    }
+  };
+
+  const register = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const response = await api.post('/auth/register', { Username: username, PasswordHash: password });
+      let { token } = response.data;
+      let user = response.data.profile
+      if ( verifySign(token) ) {
+        setToken(token);
+        setProfile(user);
+        localStorage.setItem('token', token);
+        let encryptedProfile = encryptProfile (user)
+        localStorage.setItem('profile', encryptedProfile);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      return false;
+    }
+  };
+
+  const logout = async () => {
+;
+    await api.post('/auth/logout').then(()=> removeCredentials () )
+    
+  };
+
+  const verifySign = (token: string) => {
+    const decoded: DecodedToken = jwtDecode(token);
+      let  {aud, iss} = decoded;
+      return (aud === audit && iss === secret);
+  };
+
+  // validate-jwt
+  const verifyTokenInServer = async () : Promise<boolean> => {
+    try {
+        if ( token && verifySign( token)  ) {
+          let response = await api.post('/auth/validate-jwt', { token : token })
+          if (response.request?.status === 200 &&  response.data.isValidated) return true
+        }
+        removeCredentials()
+        return false;
+      } catch (error) {
+        removeCredentials()
+        console.error('Error al usar el path /auth/validate-jwt:', error);
+        return false;
+      }
+  };
+
+  const removeCredentials = () => {
+    setToken(null);
+    setProfile(null)
+    localStorage.removeItem('token');
+    localStorage.removeItem('profile');
+  };
+
+  const isAuthenticated = (): boolean => {
+    return !!token
+  };
+
+  return (
+    <AuthContext.Provider value={{ profile, token, login, register, logout, isAuthenticated, verifyTokenInServer }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export const useToken = (): string | null => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useToken must be used within an AuthProvider');
+  }
+  return context.token;
+};
