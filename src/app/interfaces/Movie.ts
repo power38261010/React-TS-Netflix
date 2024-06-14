@@ -1,3 +1,5 @@
+import { MovieSubscriptionDto } from "./MovieSubscription";
+
 export interface Movie {
   id: number;
   title?: string;
@@ -10,8 +12,4 @@ export interface Movie {
   movieSubscriptions?: MovieSubscriptionDto[];
 }
 
-export interface MovieSubscriptionDto {
-  id: number;
-  subscriptionId: number;
-  movieId: number;
-}
+

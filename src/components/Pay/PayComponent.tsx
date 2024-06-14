@@ -6,7 +6,7 @@ import { getAllPayments } from '../../app/slices/paysSlice';
 
 const PayComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { payments, loading, error } = useSelector((state: RootState) => state.pays);
+  const { pays, loading, error } = useSelector((state: RootState) => state.pays);
 
   useEffect(() => {
     dispatch(getAllPayments());
@@ -19,7 +19,7 @@ const PayComponent: React.FC = () => {
     <div>
       <h1>Pagos</h1>
       <ul>
-        {payments.map(pay => (
+        {pays.map(pay => (
           <li key={pay.id}>{pay.monthlyPayment}</li>
         ))}
       </ul>

@@ -6,6 +6,8 @@ import PrivateRoute from './components/PrivateRoutes';
 import LoginForm from './components/Login/LoginForm';
 import MovieComponent from './components/Movie/MovieComponent';
 import PayComponent from './components/Pay/PayComponent';
+import PaymentSubscriptionComponent from './components/Pay/PaymentSubscriptionComponent';
+import PreDashboard from './components/PreDashboard';
 import UserComponent from './components/User/UserComponent';
 import SubscriptionComponent from './components/Subscription/SubscriptionComponent';
 import Dashboard from './components/Dashboard';
@@ -28,6 +30,8 @@ const App: React.FC = () => {
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/movies" element={<MovieComponent />} />
               <Route path="/pays" element={<PayComponent />} />
+              <Route path="/payment-create" element={<PaymentSubscriptionComponent />} />
+              <Route path="/pre-dashboard" element={<PreDashboard />} />
               <Route path="/users" element={<UserComponent />} />
               <Route path="/subscriptions" element={<SubscriptionComponent />} />
             </Route>

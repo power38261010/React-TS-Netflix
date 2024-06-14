@@ -24,13 +24,13 @@ export const deletePay = createAsyncThunk('pays/deletePay', async (id: number) =
 });
 
 interface PaysState {
-  payments: Pay[];
+  pays: Pay[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: PaysState = {
-  payments: [],
+  pays: [],
   loading: false,
   error: null,
 };
@@ -56,16 +56,16 @@ const paysSlice = createSlice({
       .addCase(getAllPayments.pending, handlePending)
       .addCase(getAllPayments.fulfilled, (state, action: PayloadAction<Pay[]>) => {
         state.loading = false;
-        state.payments = action.payload;
+        state.pays = action.payload;
       })
       .addCase(getAllPayments.rejected, handleRejected)
 
       .addCase(updatePay.pending, handlePending)
       .addCase(updatePay.fulfilled, (state, action: PayloadAction<Pay>) => {
         state.loading = false;
-        const index = state.payments.findIndex(pay => pay.id === action.payload.id);
+        const index = state.pays.findIndex(pay => pay.id === action.payload.id);
         if (index !== -1) {
-          state.payments[index] = action.payload;
+          state.pays[index] = action.payload;
         }
       })
       .addCase(updatePay.rejected, handleRejected)
@@ -73,7 +73,7 @@ const paysSlice = createSlice({
       .addCase(deletePay.pending, handlePending)
       .addCase(deletePay.fulfilled, (state, action: PayloadAction<number>) => {
         state.loading = false;
-        state.payments = state.payments.filter(pay => pay.id !== action.payload);
+        state.pays = state.pays.filter(pay => pay.id !== action.payload);
       })
       .addCase(deletePay.rejected, handleRejected)
 

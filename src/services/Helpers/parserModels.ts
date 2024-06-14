@@ -1,5 +1,6 @@
 // helpers.ts
-import { Movie, MovieSubscriptionDto } from '../../app/interfaces/Movie';
+import { Movie } from '../../app/interfaces/Movie';
+import {  MovieSubscriptionDto } from '../../app/interfaces/MovieSubscription';
 
 export const parseMovie = (data: any): Movie => {
   const movieSubscriptions: MovieSubscriptionDto[] = data.movieSubscriptions.$values.map((subscription: any) => ({

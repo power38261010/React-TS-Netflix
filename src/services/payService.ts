@@ -17,6 +17,19 @@ class PayService {
     }
   };
 
+  async getAllWayPayments (): Promise<any[]>  {
+    try {
+      const response = await api.get('/payments/ars');
+      console.log("pays ars  " ,response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+      reload ()
+      return [];
+    }
+  };
+
   async createPay  (pay: Omit<Pay, 'id'>): Promise<Pay>  {
     try {
       const response = await api.post<Pay>('/', pay);

@@ -11,7 +11,7 @@ class SubscriptionService {
       return response.data;
       } catch (error) {
         console.error('Error fetching subscriptions:', error);
-        reload()
+        // reload()
       return [];
     }
   }
@@ -35,7 +35,7 @@ class SubscriptionService {
       console.log("cr response.data ",response.data)
       return response.data;
       } catch (error: any) {
-        reload()
+        // reload()
         throw new Error(error.response?.data?.message || 'Error creating subscription');
         }
   }
@@ -47,7 +47,7 @@ class SubscriptionService {
       console.log("up response.data ",response.data)
       return response.data;
     } catch (error: any) {
-      reload()
+      // reload()
       throw new Error(error.response?.data?.message || 'Error updating subscription');
     }
   }
@@ -57,7 +57,7 @@ class SubscriptionService {
     try {
       await api.delete(`/subscriptions/${id}`);
     } catch (error: any) {
-      reload()
+      // reload()
       throw new Error(error.response?.data?.message || 'Error deleting subscription');
     }
   }

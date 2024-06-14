@@ -20,6 +20,10 @@ const AdminDashboard: React.FC = () => {
     navigate('/pays'); // Cambia la ruta según tus necesidades
   }
   
+  const handleMP = async () => {
+    navigate('/payment-create'); // Cambia la ruta según tus necesidades
+  }
+
   const handleMovies = async () => {
     navigate('/movies'); // Cambia la ruta según tus necesidades
   }
@@ -44,6 +48,11 @@ const AdminDashboard: React.FC = () => {
         <button  onClick={handlePays}>
           Pays
         </button>
+
+        <button  onClick={handleMP}>
+          MP
+        </button>
+
     </div>
   );
 };

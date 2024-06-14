@@ -16,6 +16,7 @@ const SubscriptionComponent: React.FC = () => {
   const [newSubscription, setNewSubscription] = useState<Subscription>({
     id: 0,
     type: "",
+    movieSubscriptions: []
   });
 
   useEffect(() => {

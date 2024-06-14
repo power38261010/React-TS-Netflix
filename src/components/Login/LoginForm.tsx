@@ -15,17 +15,14 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   if (profile !== null && token !== null )
   {
-    if (profile.role === "admin")  navigate('/admin-dashboard');
-    else navigate('/dashboard');
+    navigate('/pre-dashboard');
   }
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const isAuthenticated = await login(username, password);
       if (isAuthenticated) {
-        if (profile?.role === "admin")  navigate('/admin-dashboard');
-        else if (profile?.role === "client") navigate('/dashboard');
-        navigate('/login');
+        navigate('/pre-dashboard');
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
