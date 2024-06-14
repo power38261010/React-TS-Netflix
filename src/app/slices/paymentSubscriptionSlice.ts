@@ -25,7 +25,7 @@ export const getAllWayPayments = createAsyncThunk(
   'payment/getAllWayPayments',
   async () => {
     const response = await api.get('/payments/ars');
-    console.log("response  getAllWayPayments",response)
+    console.log("response  getAllWayPayments",response.data)
     return response.data;
   }
 );

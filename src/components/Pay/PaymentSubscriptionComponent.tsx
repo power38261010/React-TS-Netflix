@@ -1,5 +1,4 @@
-// src/components/Payment/PaymentComponent.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   initMercadoPago,
   createCardToken,
@@ -10,10 +9,11 @@ import {
 } from '@mercadopago/sdk-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../app/store';
-import { createPayment } from '../../app/slices/paymentSubscriptionSlice';
+import { createPayment, getAllWayPayments } from '../../app/slices/paymentSubscriptionSlice';
 import { PaymentRequest } from '../../app/interfaces/PaymentSubscription';
 import { CardPay } from '../../app/interfaces/CardPay';
 import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Typography, CircularProgress, FormControlLabel, Switch } from '@mui/material';
+import { getAllSubscriptions } from '../../app/slices';
 
 const PaymentComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +29,12 @@ const PaymentComponent: React.FC = () => {
     payerEmail: 'test_user_123@testuser.com',
     isAnual: false,
     payId: 1
-  });
+    });
+
+  useEffect(() => {
+    dispatch(getAllWayPayments());
+    dispatch(getAllSubscriptions());
+  }, [dispatch]);
 
   const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "TEST-c7aba999-edd1-4f0c-a1fc-ec68886af860";
   initMercadoPago(PUBLIC_KEY);
@@ -42,8 +47,13 @@ const PaymentComponent: React.FC = () => {
 
   const nameSubscription = (id: any) => {
     let sub = subscriptions.find((s) => s.id === id);
-    return sub?.type;
+    return !!sub ? sub.type : "";
   };
+
+  const nameSubscriptionSinceWP = ( id : any) => {
+    let wp = waypaysub.find((w)=> w.id === id);
+    return nameSubscription (wp?.subscriptionId);
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentData({
@@ -77,7 +87,6 @@ const PaymentComponent: React.FC = () => {
   const fetchPaymentMethods = async (bin: any) => {
     try {
       const paymentMethods = await getPaymentMethods({ bin });
-      console.log("paymentMethods ", paymentMethods);
       if (paymentMethods !== undefined) return paymentMethods.results[0].id;
     } catch (error) {
       console.error('Error fetching payment methods:', error);
@@ -86,17 +95,18 @@ const PaymentComponent: React.FC = () => {
 
   const handleTokenGeneration = async () => {
     setloadingPay(true);
+    try {
     const response = await createCardToken({
       cardholderName: cardData.cardholderName,
       identificationType: cardData.identificationType,
       identificationNumber: cardData.identificationNumber,
     });
-    console.log("response handleTokenGeneration", response);
     if (!!response && response.status === "active") {
       let bin = response.first_six_digits;
       let pm = await fetchPaymentMethods(bin) ?? '';
-      let description = `Pago ${paymentData.isAnual ? 'anual' : 'mensual'} de la subscripcion ${ nameSubscription( waypaysub.find(w=> w.id === paymentData?.payId)?.subscriptionId ) }  `;
-      console.log("description ", description)
+      let sub = nameSubscriptionSinceWP( paymentData.payId );
+      let description = `Pago ${paymentData.isAnual ? 'anual' : 'mensual'} de la subscripcion ${ sub }.`;
+
       const updatedPaymentData = {
         ...paymentData,
         token: response.id,
@@ -109,7 +119,10 @@ const PaymentComponent: React.FC = () => {
       setloadingPay(false);
       setPaymentSuccess(true);
     }
-    console.log("response token generat MP ", response);
+  } catch (error) {
+    setloadingPay(false);
+    console.error('Error fetching createCardToken:', error);
+  }
   };
 
   if (paymentSuccess) {
@@ -119,22 +132,6 @@ const PaymentComponent: React.FC = () => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={2}>
       <Typography variant="h4" gutterBottom>Selecciona una Subscripcion para disfrutar de Netflix</Typography>
-      <FormControl fullWidth margin="normal">
-        <Select
-          value={paymentData.payId}
-          onChange={handleSubscriptionChange}
-          label="Subscripcion"
-        >
-          {waypaysub.map((wayps, index) => (
-            <MenuItem key={index} value={wayps.subscriptionId}>
-              <Box display="flex" flexDirection="column">
-                <strong>{nameSubscription(wayps.subscriptionId)}</strong>
-                <strong>Precio ${paymentData.isAnual ? wayps.annualMultiplierPayment : wayps.monthlyPayment}</strong>
-              </Box>
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
       <FormControlLabel
         control={
           <Switch
@@ -146,6 +143,22 @@ const PaymentComponent: React.FC = () => {
         }
         label="Es anual"
       />
+      <FormControl fullWidth margin="normal">
+        <Select
+          value={paymentData.payId}
+          onChange={handleSubscriptionChange}
+          label="Subscripcion"
+        >
+          {waypaysub.map((wayps, index) => (
+            <MenuItem key={index} value={wayps.id}>
+              <Box display="flex" flexDirection="column">
+                <strong>{nameSubscription(wayps.subscriptionId)}</strong>
+                <strong>Precio ${paymentData.isAnual ? wayps.annualMultiplierPayment : wayps.monthlyPayment}</strong>
+              </Box>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Typography variant="h4" gutterBottom>Muro de Pago</Typography>
       <TextField
         type="email"
@@ -194,8 +207,8 @@ const PaymentComponent: React.FC = () => {
         fullWidth
         sx={{ mt: 2 }}
       >
+        {error && <Typography variant="h6" bgcolor="red" >Error:{error} </Typography>}
         {loadingPay ? <CircularProgress size={24} /> : 'Pagar'}
-        {error && <p>Error: {error}</p>}
       </Button>
     </Box>
   );
