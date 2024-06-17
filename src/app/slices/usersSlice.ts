@@ -35,11 +35,6 @@ export const getUserById = createAsyncThunk('users/getUserById', async (id: numb
   return userService.getUserById(id);
 });
 
-export const updateUser = createAsyncThunk('users/updateUser', async (user: User) => {
-  await userService.updateUser(user.id, user);
-  return user;
-});
-
 export const softDeleteUser = createAsyncThunk('users/softDeleteUser', async (id: number) => {
   await userService.softDeleteUser(id);
   return id;
@@ -103,16 +98,6 @@ const usersSlice = createSlice({
         }
       })
       .addCase(getUserById.rejected, handleRejected)
-
-      .addCase(updateUser.pending, handlePending)
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
-        const index = state.users.findIndex(user => user.id === action.payload.id);
-        if (index !== -1) {
-          state.users[index] = action.payload;
-        }
-      })
-      .addCase(updateUser.rejected, handleRejected)
 
       .addCase(softDeleteUser.pending, handlePending)
       .addCase(softDeleteUser.fulfilled, (state, action: PayloadAction<number>) => {

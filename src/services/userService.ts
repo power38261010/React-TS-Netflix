@@ -13,16 +13,7 @@ class UserService {
     }
   }
 
-  async updateUser(id: number, userData: any): Promise<boolean> {
-    try {
-      await api.put(`/users/${id}`, userData);
-      return true;
-    } catch (error) {
-      console.error(`Error updating user with ID ${id}:`, error);
-      reload();
-      return false;
-    }
-  }
+
 
   async softDeleteUser(id: number): Promise<boolean> {
     try {

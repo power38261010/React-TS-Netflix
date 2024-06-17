@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 import api from '../services/api';
 import { jwtDecode } from "jwt-decode";
 import {encryptProfile, decryptProfile} from './crypto/cryptoJS'
+import { ProfileUpdate } from '../app/interfaces/ProfileUpdate';
+import { Subscription } from '../app/interfaces/Subscription';
 
 const secret = process.env.REACT_APP_API_KEY;
 const audit = process.env.REACT_APP_API_AUD;
@@ -11,16 +13,19 @@ export interface Profile {
   id: number;
   role: string;
   username: string;
+  email: string;
   isPaid?: boolean;
   subscriptionId?: number;
+  subscription?: Subscription;
   expirationDate?: Date;
 }
-
 interface AuthContextType {
   profile: Profile | null;
   token: string | null;
   login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, password: string) => Promise<boolean>;
+  updateProfile : (id: number, userData: ProfileUpdate) => Promise<boolean>;
+  refreshProfile: () => Promise<boolean>;
   logout: () => void;
   isAuthenticated: () => boolean;
   verifyTokenInServer: () => Promise<boolean>;
@@ -59,11 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let { token } = response.data;
       let user = response.data.profile
       if ( verifySign(token) ) {
-        setToken(token);
-        setProfile(user);
-        localStorage.setItem('token', token);
-        let encryptedProfile = encryptProfile (user)
-        localStorage.setItem('profile', encryptedProfile);
+        setCredentials (token,user)
         return true;
       }
       return false;
@@ -79,11 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let { token } = response.data;
       let user = response.data.profile
       if ( verifySign(token) ) {
-        setToken(token);
-        setProfile(user);
-        localStorage.setItem('token', token);
-        let encryptedProfile = encryptProfile (user)
-        localStorage.setItem('profile', encryptedProfile);
+        setCredentials (token,user)
         return true;
       }
       return false;
@@ -93,10 +90,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateProfile = async (id: number, userData: ProfileUpdate): Promise<boolean> =>{
+    try {
+      let response = await api.put(`/users/${id}`, userData);
+      console.log("response" ,response)
+      let { token } = response.data;
+      let user = response.data.profile
+      if ( verifySign(token) ) {
+        setCredentials (token,user)
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(`Error updating user with ID ${id}:`, error);
+      return false;
+    }
+  }
+
+  const refreshProfile = async (): Promise<boolean> =>{
+    try {
+      let response = await api.get(`/users/${profile?.id}`);
+      console.log("refreshProfile response ", response);
+      let user = response.data;
+      let token = localStorage.getItem('token');
+      if ( user !== null && !!token) {
+        removeCredentials();
+        setCredentials (token,user)
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(`Error updating user with ID ${profile?.id}:`, error);
+      return false;
+    }
+  }
+
+
   const logout = async () => {
-;
-    await api.post('/auth/logout').then(()=> removeCredentials () )
-    
+    await api.post('/auth/logout').then(()=> removeCredentials () );
   };
 
   const verifySign = (token: string) => {
@@ -128,12 +159,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('profile');
   };
 
+  const setCredentials = (token:string , profile:Profile) => {
+    setToken(token);
+    setProfile(profile);
+    localStorage.setItem('token', token);
+    let encryptedProfile = encryptProfile (profile)
+    localStorage.setItem('profile', encryptedProfile);
+  };
+
   const isAuthenticated = (): boolean => {
     return !!token
   };
 
   return (
-    <AuthContext.Provider value={{ profile, token, login, register, logout, isAuthenticated, verifyTokenInServer }}>
+    <AuthContext.Provider value={{ profile, token, login, register, updateProfile, logout, isAuthenticated, verifyTokenInServer, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -17,7 +17,7 @@ const LoadingScreen = () => {
     dispatch(getAllPaymentSubscriptions());
     dispatch(getAllPayments());
   }
-  if ( !!profile && profile.role === "admin") {
+  if ( !!profile && ["admin","super_admin"].includes(profile.role)) {
     dispatch(searchUsers({}));
   }
   useEffect(() => {
@@ -26,7 +26,7 @@ const LoadingScreen = () => {
     dispatch(getAllSubscriptions());
     if (profile !== null && token !== null )
       {
-          if (profile.role === "admin")  navigate('/admin-dashboard');
+          if (["admin","super_admin"].includes(profile.role))  navigate('/admin-dashboard');
           else navigate('/dashboard');
         }
   }, [dispatch]);
