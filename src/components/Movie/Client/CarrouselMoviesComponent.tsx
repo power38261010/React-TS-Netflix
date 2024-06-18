@@ -8,6 +8,7 @@ import { Movie } from '../../../app/interfaces/Movie';
 interface CarrouselMoviesComponentProps {
   movies: Movie[];
   onOpenModal: (movie: Movie) => void;
+  onOpenPlayMovie: (movie: Movie) => void;
 }
 
 const genres = [
@@ -16,7 +17,7 @@ const genres = [
   "Futurista", "Retro"
 ];
 
-const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ movies, onOpenModal }) => {
+const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ movies, onOpenModal, onOpenPlayMovie }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftChevron, setShowLeftChevron] = useState(false);
   const [showRightChevron, setShowRightChevron] = useState(true);
@@ -72,11 +73,23 @@ const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ mov
                   },
                 }}
               >
+                <Box sx={{ml:3}}></Box>
                 {moviesByGenre.map((movie) => (
-                  <Box key={movie.id} sx={{ mr: 0.5, flexShrink: 0 }}>
-                    <MovieItemComponent movie={movie} onOpenModal={onOpenModal} />
+                  <Box key={movie.id} sx={{ m: 4, flexShrink: 0, transition: 'transform 0.3s' }}>
+                    <Box
+                      sx={{
+                        transform: 'scale(1)',
+                        transition: 'transform 0.3s',
+                        '&:hover': {
+                          transform: 'scale(1.3)',
+                        },
+                      }}
+                    >
+                      <MovieItemComponent movie={movie} onOpenModal={onOpenModal} onOpenPlayMovie={onOpenPlayMovie} />
+                    </Box>
                   </Box>
                 ))}
+                <Box sx={{mr:3}}></Box>
               </Box>
               {showRightChevron && (
                 <IconButton onClick={scrollRight} sx={{ ml: 2 }}>

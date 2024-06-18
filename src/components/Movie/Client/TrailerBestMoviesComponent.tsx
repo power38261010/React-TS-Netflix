@@ -4,6 +4,7 @@ import { RootState, AppDispatch } from '../../../app/store';
 import { searchMovies } from '../../../app/slices/moviesSlice';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import styles from './TrailerBestMoviesComponent.module.css';
+import { useInView } from 'react-intersection-observer';
 
 const TrailerBestMoviesComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,6 +13,7 @@ const TrailerBestMoviesComponent: React.FC = () => {
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
   const [videoError, setVideoError] = useState(false);
   const playerRef = useRef<any>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     dispatch(searchMovies({}));
@@ -23,12 +25,14 @@ const TrailerBestMoviesComponent: React.FC = () => {
       const topThreeMovies = sortedMovies?.slice(0, 3);
 
       const timer = setInterval(() => {
-        setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % topThreeMovies.length);
+        if (isVisible) {
+          setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % topThreeMovies.length);
+        }
       }, 60000); // Cambiar tráiler cada 60 segundos
 
       return () => clearInterval(timer);
     }
-  }, [movies]);
+  }, [movies, isVisible]);
 
   const sortedMovies = [...movies].sort((a, b) => (b?.rating ?? 0) - (a?.rating ?? 0));
   const topThreeMovies = sortedMovies.slice(0, 3);
@@ -40,13 +44,13 @@ const TrailerBestMoviesComponent: React.FC = () => {
     width: '100%',
     playerVars: {
       autoplay: 1,
-      modestbranding: 1, // Reducir la marca de YouTube
-      rel: 0, // No mostrar videos relacionados al final
-      iv_load_policy: 3, // No mostrar anotaciones
-      disablekb: 1, // Desactivar el teclado
-      fs: 0, // Deshabilitar pantalla completa
-      controls: 0, // Desactivar controles
-      quality: 'hd1080', // Establecer calidad del video a la más alta disponible
+      modestbranding: 1,
+      rel: 0,
+      iv_load_policy: 3,
+      disablekb: 1,
+      fs: 0,
+      controls: 0,
+      quality: 'hd1080',
     },
   };
 
@@ -55,12 +59,14 @@ const TrailerBestMoviesComponent: React.FC = () => {
   };
 
   const onPlayerReady = (event: { target: { playVideo: () => void; }; }) => {
-    event?.target?.playVideo();
-    playerRef.current = event?.target; // Guardar la referencia del reproductor
+    if(event?.target) {
+      event?.target?.playVideo();
+      playerRef.current = event?.target;
+    }
   };
 
   const onPlayerStateChange = (event: { data: number }) => {
-    if (event.data === 0) { // Video ha terminado
+    if (event.data === 0) {
       setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % topThreeMovies.length);
     }
   };
@@ -70,8 +76,19 @@ const TrailerBestMoviesComponent: React.FC = () => {
     playerRef.current?.playVideo();
   };
 
+  const { ref } = useInView({
+    threshold: 0.6, // Umbral del 60%
+    onChange: (inView) => {
+      setIsVisible(inView);
+      if (!inView) {
+        // Si no está visible, pausar el video
+        playerRef.current?.pauseVideo();
+      } else playerRef.current?.playVideo();
+    },
+  });
+
   return (
-    <div className={styles.trailerContainer}>
+    <div className={styles.trailerContainer} ref={ref}>
       {videoError ? (
         <div className={styles.errorPopup}>Video no disponible</div>
       ) : (

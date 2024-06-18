@@ -1,9 +1,9 @@
 // MovieComponent.tsx
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../app/store';
-import { searchMovies, createMovie, updateMovie, deleteMovie } from '../../app/slices/moviesSlice';
-import { Movie } from '../../app/interfaces/Movie';
+import { RootState, AppDispatch } from '../../../app/store';
+import { searchMovies, createMovie, updateMovie, deleteMovie } from '../../../app/slices/moviesSlice';
+import { Movie } from '../../../app/interfaces/Movie';
 
 const MovieComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

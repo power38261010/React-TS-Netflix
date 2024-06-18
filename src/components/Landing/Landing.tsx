@@ -3,8 +3,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './NetflixLanding.module.css';
-import logoNetflix from '../../assets/logoNetflix.png';
-import NavBar from '../NavBar/NavBar';
+
 
 
 
@@ -20,15 +19,6 @@ const NetflixLanding: React.FC = () => {
     };
     return (
       <div className={styles.netflixLanding}>
-        {/* <NavBar /> */}
-        {/* <header className={styles.header }>
-          <div className={styles.logo}>
-            <img src={logoNetflix} alt="Netflix Logo" />
-          </div>
-          <div className={styles.actions}>
-            <button onClick = {goToLogin} className={styles.signIn}>Iniciar Sesion</button>
-          </div>
-        </header> */}
         <main className={styles.mainContent}>
           <div className={styles.redeemSection}>
             <h1>Películas y series ilimitadas y mucho más</h1>

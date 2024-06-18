@@ -11,11 +11,12 @@ import { useAuth } from '../../../contexts/AuthContext';
 interface MovieItemModalProps {
   movie: Movie | null;
   onClose: () => void;
+  onOpenPlayMovie: (movie: Movie) => void;
 }
 
-const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose }) => {
+const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenPlayMovie }) => {
   const { profile } = useAuth();
-  
+
   if (!movie) return null;
 
   const opts = {
@@ -25,6 +26,13 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose }) => {
       autoplay: 1,
       loop: 1,
       playlist: movie?.trailerUrl?.split('v=')[1].split('&')[0],
+      modestbranding: 1,
+      rel: 0,
+      iv_load_policy: 3,
+      disablekb: 1,
+      fs: 0,
+      controls: 0,
+      quality: 'hd1080',
     },
   };
 
@@ -36,15 +44,23 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose }) => {
         </IconButton>
         <Box sx={{ mb: 2 }}>
           <YouTube videoId={movie?.trailerUrl?.split('v=')[1].split('&')[0]} opts={opts} />
-          <Box /*sx = {{ position: 'absolute', paddingBottom: -10, paddingLegt: -10, borderRadius:5  }} **/>
+          <Box>
             <Typography variant="h4" sx={{ mb: 1 }}>{movie.title}</Typography>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Button disabled={!profile?.isPaid} variant="contained" color="primary" sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-          {profile?.isPaid && (<PlayCircleIcon sx={{ mr: 1 }} />) }
-            {profile?.isPaid ? "Reproducir": "Renueva tu Subscripcion" }
-
+          <Button
+            disabled={!profile?.isPaid}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              onClose();
+              onOpenPlayMovie(movie);
+            }}
+            sx={{ mr: 2, display: 'flex', alignItems: 'center' }}
+          >
+            {profile?.isPaid && (<PlayCircleIcon sx={{ mr: 1 }} />)}
+            {profile?.isPaid ? "Reproducir" : "Renueva tu Subscripcion"}
           </Button>
           <IconButton sx={{ color: 'white' }}>
             <ThumbUpIcon />
@@ -56,7 +72,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose }) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ flex: 1, mr: 2 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Géneros: </strong> {movie?.genre?.split(' ').join(', ')+'.'}
+              <strong>Géneros: </strong> {movie?.genre?.split(' ').join(', ') + '.'}
             </Typography>
           </Box>
           <Box sx={{ flex: 1 }}>

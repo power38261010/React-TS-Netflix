@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './NavBar.module.css';
 import logoNetflix from '../../assets/logoNetflix.png';
-import ProfileManager from './ProfileModal';
+import ProfileManager from '../Profile/ProfileModal';
 
 const NavBar: React.FC = () => {
   const { profile, logout } = useAuth();
@@ -38,7 +38,7 @@ const NavBar: React.FC = () => {
           <>
             <Link to="/users" className={styles.navLink}>Usuarios</Link>
             <Link to="/movies" className={styles.navLink}>Películas</Link>
-            <Link to="/trailers-best-movies" className={styles.navLink}>Trailers Películas</Link>
+            <Link to="/movies-netflix" className={styles.navLink}>Peliculas Clientes</Link>
           </>
         )}
         {!!profile && ["super_admin"].includes(profile.role) && (
@@ -49,9 +49,7 @@ const NavBar: React.FC = () => {
         )}
         {profile?.role === 'client' && (
           <>
-            <Link to="/movies" className={styles.navLink}>Películas</Link>
-            <Link to="/favorites" className={styles.navLink}>Favoritos</Link>
-            <Link to="/new-releases" className={styles.navLink}>Estrenos</Link>
+          <Link to="/movies-netflix" className={styles.navLink}>Películas</Link>
           </>
         )}
       </div>

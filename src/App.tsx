@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoutes';
 import LoginForm from './components/Login/LoginForm';
-import MovieComponent from './components/Movie/MovieComponent';
-import MovieMainCompoment from './components/Movie/Client/MovieMainCompoment';
+import MovieComponent from './components/Movie/Admin/MovieComponent';
+import MovieMainCompoment from './pages/MovieMainClientt';
 import PayComponent from './components/Pay/PayComponent';
 import PaymentSubscriptionComponent from './components/Pay/PaymentSubscriptionComponent';
 import PreDashboard from './components/PreDashboard';
@@ -28,8 +28,9 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route element={<PrivateRoute roles={['admin','super_admin','client']} />}>
+              <Route path="/pre-dashboard" element={<PreDashboard />} />
               <Route path="/payment-create" element={<PaymentSubscriptionComponent />} />
-              <Route path="/trailers-best-movies" element={<MovieMainCompoment />} />
+              <Route path="/movies-netflix" element={<MovieMainCompoment />} />
             </Route>
             <Route element={<PrivateRoute roles={['super_admin']} />}>
               <Route path="/pays" element={<PayComponent />} />
@@ -38,12 +39,11 @@ const App: React.FC = () => {
             <Route element={<PrivateRoute roles={['admin','super_admin']} />}>
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/movies" element={<MovieComponent />} />
-              <Route path="/pre-dashboard" element={<PreDashboard />} />
               <Route path="/users" element={<UserComponent />} />
             </Route>
             <Route element={<PrivateRoute roles={['client']} />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/trailers-best-movies" element={<MovieMainCompoment />} />
+              <Route path="/movies-netflix" element={<MovieMainCompoment />} />
             </Route>
             {/* Other routes */}
           </Routes>

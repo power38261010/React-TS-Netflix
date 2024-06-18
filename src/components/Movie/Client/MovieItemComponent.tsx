@@ -11,15 +11,16 @@ import { useAuth } from '../../../contexts/AuthContext';
 interface MovieItemComponentProps {
   movie: Movie;
   onOpenModal: (movie: Movie) => void;
+  onOpenPlayMovie: (movie: Movie) => void;
 }
 
-const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenModal }) => {
+const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenModal, onOpenPlayMovie }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { profile } = useAuth();
 
   const opts = {
-    height: '100%', // Usamos '100%' para que el video ocupe toda la altura disponible
-    width: '100%', // Usamos '100%' para que el video ocupe todo el ancho disponible
+    height: '100%',
+    width: '100%',
     playerVars: {
       autoplay: 1,
       loop: 1,
@@ -40,9 +41,8 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
       onMouseLeave={() => setIsHovered(false)}
       sx={{
         position: 'relative',
-        height: '250px', // Altura fija para todos los items
-        width: '300px', // Ancho fijo para todos los items
-        margin: '20px', // Margen entre los items del carrusel
+        height: '250px',
+        width: '300px',
         overflow: 'hidden',
       }}
     >
@@ -50,12 +50,11 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
         <Box
           sx={{
             position: 'relative',
-            height: '100%', // Altura fija para todos los items
-            width: '100%', // Ancho fijo para todos los items
+            height: '100%',
+            width: '100%',
             overflow: 'hidden',
           }}
         >
-          {/* Renderizamos el video de YouTube con las opciones proporcionadas */}
           <YouTube videoId={movie?.trailerUrl?.split('v=')[1].split('&')[0]} opts={opts} />
           <Box
             sx={{
@@ -75,7 +74,7 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {profile?.isPaid && (
-                  <IconButton>
+                  <IconButton onClick={() => onOpenPlayMovie(movie)}>
                     <PlayCircleIcon style={{ color: 'white' }} />
                   </IconButton>
                 )}
@@ -101,24 +100,24 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
         <Box
           sx={{
             position: 'relative',
-            minHeight: '250px', // Ajustamos la altura mínima para mantener el mismo tamaño
-            minWidth: '300px', // Ajustamos el ancho mínimo para mantener el mismo tamaño
+            minHeight: '250px',
+            minWidth: '300px',
             width: '100%',
             background: `url(${movie?.posterUrl}) center center/cover no-repeat`,
           }}
         >
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          color: 'white',
-          padding: '10px',
-          boxSizing: 'border-box',
-        }}
-      >
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '10px',
+              boxSizing: 'border-box',
+            }}
+          >
             <Typography variant="h6" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {movie.title}
             </Typography>
