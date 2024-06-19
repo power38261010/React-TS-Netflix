@@ -7,7 +7,7 @@ export const createPayment = createAsyncThunk(
   'payment/createPayment',
   async (paymentData: PaymentRequest) => {
     const response = await api.post('/payments/create-payment', paymentData);
-    console.log("response  createPayment",response)
+    console.log('respomse pagado ', response)
     return response.data;
   }
 );
@@ -34,6 +34,7 @@ interface PaymentState {
   payment: PaymentResponse | null;
   paysub : PaySubscription[] | [];
   waypaysub : Pay[] | [];
+  payresult: any | null;
   loading: boolean;
   error: string | null;
 }
@@ -43,10 +44,10 @@ const initialState: PaymentState = {
   payment: null,
   paysub : [],
   waypaysub : [],
+  payresult: null,
   loading: false,
   error: null,
 };
-
 
 
 const paymentSlice = createSlice({
@@ -58,15 +59,16 @@ const paymentSlice = createSlice({
       .addCase(createPayment.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.payresult = null;
       })
       .addCase(createPayment.fulfilled, (state, action) => {
         state.loading = false;
-        state.payment = action.payload;
+        state.payresult = action.payload;
       })
       .addCase(createPayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to process payment';
-        state.payment = null;
+        state.payresult = false;
 
       })
 

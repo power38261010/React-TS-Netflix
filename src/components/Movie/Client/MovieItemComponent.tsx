@@ -7,7 +7,10 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Movie } from '../../../app/interfaces/Movie';
 import { useAuth } from '../../../contexts/AuthContext';
-
+import { rateMovie } from '../../../app/slices/moviesSlice';
+import { AppDispatch } from '../../../app/store';
+import { useDispatch } from 'react-redux';
+import { AnimatedIconButton} from './EmotionRateMovie';
 interface MovieItemComponentProps {
   movie: Movie;
   onOpenModal: (movie: Movie) => void;
@@ -17,6 +20,11 @@ interface MovieItemComponentProps {
 const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenModal, onOpenPlayMovie }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { profile } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const rateThisMovie = (islikeIt: boolean) => {
+    dispatch (rateMovie ({id:movie.id ,isLike:islikeIt }) )
+  }
 
   const opts = {
     height: '100%',
@@ -78,12 +86,12 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
                     <PlayCircleIcon style={{ color: 'white' }} />
                   </IconButton>
                 )}
-                <IconButton>
-                  <ThumbUpIcon style={{ color: 'white' }} />
-                </IconButton>
-                <IconButton>
-                  <ThumbDownIcon style={{ color: 'red' }} />
-                </IconButton>
+                <AnimatedIconButton onClick={() => rateThisMovie(true)} sx={{ color: 'white' }}>
+                  <ThumbUpIcon />
+                </AnimatedIconButton>
+                <AnimatedIconButton onClick={() => rateThisMovie(false)} sx={{ color: 'red' }}>
+                  <ThumbDownIcon />
+                </AnimatedIconButton>
               </Box>
               <Tooltip title="Más detalles">
                 <IconButton onClick={() => onOpenModal(movie)} sx={{ mr: '8px' }}>

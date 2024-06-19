@@ -7,6 +7,11 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { Movie } from '../../../app/interfaces/Movie';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { rateMovie } from '../../../app/slices/moviesSlice';
+import { AppDispatch } from '../../../app/store';
+import { useDispatch } from 'react-redux';
+import { AnimatedIconButton} from './EmotionRateMovie';
 
 interface MovieItemModalProps {
   movie: Movie | null;
@@ -16,11 +21,17 @@ interface MovieItemModalProps {
 
 const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenPlayMovie }) => {
   const { profile } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   if (!movie) return null;
 
+  const rateThisMovie = (islikeIt: boolean) => {
+    dispatch (rateMovie ({id:movie.id ,isLike:islikeIt }) )
+  }
+
   const opts = {
-    height: '390', // Altura fija para mantener proporción del video
+    height: '390',
     width: '100%',
     playerVars: {
       autoplay: 1,
@@ -50,24 +61,27 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Button
-            disabled={!profile?.isPaid}
             variant="contained"
             color="primary"
             onClick={() => {
-              onClose();
-              onOpenPlayMovie(movie);
+              if ( !!profile && profile?.isPaid ) {
+                onClose();
+                onOpenPlayMovie(movie);
+              } else {
+                navigate('/payment-create');
+              }
             }}
             sx={{ mr: 2, display: 'flex', alignItems: 'center' }}
           >
             {profile?.isPaid && (<PlayCircleIcon sx={{ mr: 1 }} />)}
             {profile?.isPaid ? "Reproducir" : "Renueva tu Subscripcion"}
           </Button>
-          <IconButton sx={{ color: 'white' }}>
+          <AnimatedIconButton onClick={() => rateThisMovie(true)} sx={{ color: 'white' }}>
             <ThumbUpIcon />
-          </IconButton>
-          <IconButton sx={{ color: 'white' }}>
+          </AnimatedIconButton>
+          <AnimatedIconButton onClick={() => rateThisMovie(false)} sx={{ color: 'red' }}>
             <ThumbDownIcon />
-          </IconButton>
+          </AnimatedIconButton>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ flex: 1, mr: 2 }}>

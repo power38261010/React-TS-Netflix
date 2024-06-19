@@ -5,14 +5,13 @@ import MovieItemModal from '../components/Movie/Client/MovieItemModal';
 import PlayMovieComponent from '../components/Movie/Client/PlayMovieComponent';
 import TrailerBestMoviesComponent from '../components/Movie/Client/TrailerBestMoviesComponent';
 import { Movie } from '../app/interfaces/Movie';
-import { RootState } from '../app/store';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../app/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const App: React.FC = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [selectedPlayMovie, setSelectedPlayMovie] = useState<Movie | null>(null);
   const { movies } = useSelector((state: RootState) => state.movies);
-
 
   const handleOpenModal = (movie: Movie) => {
     setSelectedMovie(movie);

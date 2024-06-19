@@ -27,7 +27,7 @@ const LoadingScreen = () => {
     if (profile !== null && token !== null )
       {
           if (["admin","super_admin"].includes(profile.role))  navigate('/admin-dashboard');
-          else navigate('/dashboard');
+          else navigate('/movies-netflix');
         }
   }, [dispatch]);
 

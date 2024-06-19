@@ -26,17 +26,20 @@ import {
   Switch,
   Grid,
   Paper,
-  Link, Card,
+  Link,
+  Card,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { getAllSubscriptions } from '../../app/slices';
 import { CardNumberParams } from '@mercadopago/sdk-react/secureFields/cardNumber/types';
 import { useAuth } from '../../contexts/AuthContext';
-import { Subscription } from '../../app/interfaces/Subscription';
 
 const PaymentComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { profile, refreshProfile } = useAuth();
-  const { waypaysub, error } = useSelector((state: RootState) => state.payment);
+  const { waypaysub, payresult, error } = useSelector((state: RootState) => state.payment);
+
   const [loadingPay, setloadingPay] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentData, setPaymentData] = useState<PaymentRequest>({
@@ -48,21 +51,26 @@ const PaymentComponent: React.FC = () => {
     isAnual: false,
     payId: 1,
   });
-  console.log("expiration ", profile?.expirationDate?.toLocaleString().split('T')[0].split('-').reverse().join('/'))
-  useEffect(() => {
-    dispatch(getAllWayPayments());
-    dispatch(getAllSubscriptions());
-  }, [dispatch]);
-  console.log("waypaysub ", waypaysub)
-  const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "TEST-c7aba999-edd1-4f0c-a1fc-ec68886af860";
-  const MP_CARDS_TEST = process.env.MP_CARDS_TEST ?? "https://www.mercadopago.com.ar/developers/es/docs/adobe-commerce/additional-content/your-integrations/test/cards";
-  initMercadoPago(PUBLIC_KEY);
 
   const [cardData, setCardData] = useState<CardPay>({
     cardholderName: 'APRO',
     identificationType: 'DNI',
     identificationNumber: '',
   });
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+
+  useEffect(() => {
+    dispatch(getAllWayPayments());
+    dispatch(getAllSubscriptions());
+  }, [dispatch]);
+
+  const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "TEST-c7aba999-edd1-4f0c-a1fc-ec68886af860";
+  const MP_CARDS_TEST = process.env.MP_CARDS_TEST ?? "https://www.mercadopago.com.ar/developers/es/docs/adobe-commerce/additional-content/your-integrations/test/cards";
+
+  initMercadoPago(PUBLIC_KEY);
 
   const nameSubscriptionSinceWP = (id: any) => {
     let wp = waypaysub.find((w) => w.id === id);
@@ -147,7 +155,6 @@ const PaymentComponent: React.FC = () => {
       const expirationDate = new Date(profile.expirationDate);
       const midpointDate = getMidpointDate(expirationDate, sub);
       const dateResult = addTime(midpointDate);
-      console.log("sub ",sub," expirationDate ",expirationDate," midpointDate ",midpointDate," dateResult ",dateResult)
       return '   Fecha de Expiracion: ' + dateResult.toDateString().split('T')[0].split('-').reverse().join('/') + '  ';
     }
     return '';
@@ -158,6 +165,9 @@ const PaymentComponent: React.FC = () => {
       const paymentMethods = await getPaymentMethods({ bin });
       if (paymentMethods !== undefined) return paymentMethods.results[0].id;
     } catch (error) {
+      setSnackbarMessage('Error fetching payment methods');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       console.error('Error fetching payment methods:', error);
     }
   };
@@ -175,8 +185,6 @@ const PaymentComponent: React.FC = () => {
         identificationNumber: cardData.identificationNumber,
       });
 
-      // Inspecciona completamente la estructura de la respuesta
-
       if (!!response && response.status === "active") {
         let bin = response.first_six_digits;
         let pm = await fetchPaymentMethods(bin) ?? '';
@@ -192,20 +200,45 @@ const PaymentComponent: React.FC = () => {
 
         setPaymentData(updatedPaymentData);
         dispatch(createPayment(updatedPaymentData));
-        await refreshProfile();
-        setloadingPay(false);
         setPaymentSuccess(true);
       }
     } catch (error) {
       setloadingPay(false);
-      console.error('Error fetching createCardToken:', error);
+      setSnackbarMessage('Error creating card token');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      console.error('Error creating card token:', error);
     }
   };
 
-  if (paymentSuccess) {
-    return <Typography variant="h4">¡Pago exitoso!</Typography>;
-  }
-  // profile
+  useEffect(() => {
+    if (paymentSuccess) {
+      if (payresult !== null) {
+        if (payresult === false) {
+          setPaymentSuccess(false);
+          setloadingPay(false);
+          setSnackbarMessage('¡Pago rechazado!');
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
+        } else if (payresult?.id) {
+          setPaymentSuccess(false);
+          setloadingPay(false);
+          refreshProfile();
+          setSnackbarMessage('¡Pago exitoso!');
+          setSnackbarSeverity('success');
+          setSnackbarOpen(true);
+        }
+      }
+    }
+  }, [paymentSuccess, payresult, refreshProfile]);
+
+  const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={2} sx={{ backgroundColor: '#141414', minHeight: '100vh'}}>
       <Typography variant="h5" gutterBottom sx={{ color: 'white', marginTop: '7vh' }}>
@@ -214,7 +247,7 @@ const PaymentComponent: React.FC = () => {
       { profile?.isPaid && (
       <Typography variant="h6" gutterBottom sx={{ color: 'white', marginTop: '3vh' }}>
         El {profile?.expirationDate?.toLocaleString().split('T')[0].split('-').reverse().join('/')} vence tu Subscripcion {profile?.subscription?.type}. 
-         Es oportuno comentar que la computacion de dias de subscripcion es a razon de 2 dias Started = 1 dia Premium!
+         Es oportuno comentar que si le interesa abonar un modelo de subscripcion, la computacion que contempla su fecha de vencimiento de su modelo de subscripcion, comprende la siguiente conversion:  ¡2 dias Started = 1 dia Premium!
       </Typography>
       )}
       <Grid container spacing={3} sx={{ marginTop: '1vh' }}>
@@ -242,8 +275,9 @@ const PaymentComponent: React.FC = () => {
                   <MenuItem key={index} value={wayps.id} sx={{ marginBottom: 2, input: { color: '#fff' }, '& .MuiOutlinedInput-root': { borderColor: '#fff' } }}>
                     <Box display="flex" flexDirection="column" sx={{ marginBottom: 2, input: { color: '#fff' }, '& .MuiOutlinedInput-root': { borderColor: '#fff' } }}>
                       <strong>{wayps.subscription?.type}</strong>
-                      <strong>Precio ${paymentData.isAnual ? wayps.annualMultiplierPayment : wayps.monthlyPayment} {profile?.isPaid && getTotalExpirateDate(wayps.subscriptionId)}</strong>
-                      
+                      <strong>Precio ${paymentData.isAnual ? wayps.annualMultiplierPayment : wayps.monthlyPayment}
+                          {/* {profile?.isPaid && getTotalExpirateDate(wayps.subscriptionId)} */}
+                      </strong>
                     </Box>
                   </MenuItem>
                 ))}
@@ -327,6 +361,15 @@ const PaymentComponent: React.FC = () => {
           {loadingPay ? <CircularProgress size={24} /> : 'Pagar'}
         </Button>
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

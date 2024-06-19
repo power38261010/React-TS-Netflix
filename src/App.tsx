@@ -11,7 +11,6 @@ import PaymentSubscriptionComponent from './components/Pay/PaymentSubscriptionCo
 import PreDashboard from './components/PreDashboard';
 import UserComponent from './components/User/UserComponent';
 import SubscriptionComponent from './components/Subscription/SubscriptionComponent';
-import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import Unauthorized from './components/Unauthorized';
 import Landing from './components/Landing/Landing';
@@ -42,7 +41,6 @@ const App: React.FC = () => {
               <Route path="/users" element={<UserComponent />} />
             </Route>
             <Route element={<PrivateRoute roles={['client']} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/movies-netflix" element={<MovieMainCompoment />} />
             </Route>
             {/* Other routes */}

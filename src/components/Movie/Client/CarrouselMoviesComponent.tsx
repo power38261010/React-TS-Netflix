@@ -75,13 +75,16 @@ const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ mov
               >
                 <Box sx={{ml:3}}></Box>
                 {moviesByGenre.map((movie) => (
-                  <Box key={movie.id} sx={{ m: 4, flexShrink: 0, transition: 'transform 0.3s' }}>
+                  <Box key={movie.id} sx={{ m: 2, flexShrink: 0, transition: 'transform 0.3s' }}>
                     <Box
                       sx={{
-                        transform: 'scale(1)',
-                        transition: 'transform 0.3s',
+                        m: 2,
+                        flexShrink: 0,
+                        transition: 'transform 0.3s, z-index 0s',
+                        zIndex: 1,
                         '&:hover': {
                           transform: 'scale(1.3)',
+                          zIndex: 20,
                         },
                       }}
                     >
