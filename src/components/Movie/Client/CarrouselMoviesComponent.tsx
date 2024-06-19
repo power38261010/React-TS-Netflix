@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -18,29 +18,46 @@ const genres = [
 ];
 
 const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ movies, onOpenModal, onOpenPlayMovie }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [showLeftChevron, setShowLeftChevron] = useState(false);
-  const [showRightChevron, setShowRightChevron] = useState(true);
+  const genreRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftChevron(scrollLeft > 0);
-      setShowRightChevron(scrollWidth - scrollLeft > clientWidth);
+  const handleScroll = (genre: string) => {
+    const ref = genreRefs.current[genre];
+    if (ref) {
+      const { scrollLeft, scrollWidth, clientWidth } = ref;
+      setShowLeftChevron(genre, scrollLeft > 0);
+      setShowRightChevron(genre, scrollWidth - scrollLeft > clientWidth);
     }
   };
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+  const scrollRight = (genre: string) => {
+    const ref = genreRefs.current[genre];
+    if (ref) {
+      ref.scrollBy({ left: 340, behavior: 'smooth' });
     }
   };
 
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -340, behavior: 'smooth' });
+  const scrollLeft = (genre: string) => {
+    const ref = genreRefs.current[genre];
+    if (ref) {
+      ref.scrollBy({ left: -340, behavior: 'smooth' });
     }
   };
+
+  const [chevronVisibility, setChevronVisibility] = useState<{ [key: string]: { left: boolean; right: boolean } }>({});
+
+  const setShowLeftChevron = (genre: string, show: boolean) => {
+    setChevronVisibility((prev) => ({ ...prev, [genre]: { ...prev[genre], left: show } }));
+  };
+
+  const setShowRightChevron = (genre: string, show: boolean) => {
+    setChevronVisibility((prev) => ({ ...prev, [genre]: { ...prev[genre], right: show } }));
+  };
+
+  useEffect(() => {
+    genres.forEach((genre) => {
+      handleScroll(genre);
+    });
+  }, [movies]);
 
   return (
     <Box>
@@ -54,14 +71,14 @@ const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ mov
               {genre}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {showLeftChevron && (
-                <IconButton onClick={scrollLeft} sx={{ ml: 2 }}>
+              {chevronVisibility[genre]?.left && (
+                <IconButton onClick={() => scrollLeft(genre)} sx={{ ml: 2 }}>
                   <ChevronLeftIcon style={{ color: 'white' }} />
                 </IconButton>
               )}
               <Box
-                ref={scrollRef}
-                onScroll={handleScroll}
+                ref={(el: any) => { genreRefs.current[genre] = el }}
+                onScroll={() => handleScroll(genre)}
                 sx={{
                   display: 'flex',
                   overflowX: 'auto',
@@ -73,29 +90,31 @@ const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ mov
                   },
                 }}
               >
-                <Box sx={{ml:3}}></Box>
+                <Box sx={{ ml: 3 }}></Box>
                 {moviesByGenre.map((movie) => (
                   <Box key={movie.id} sx={{ m: 2, flexShrink: 0, transition: 'transform 0.3s' }}>
                     <Box
+                      key={movie.id}
                       sx={{
-                        m: 2,
+                        marginY: 2,
                         flexShrink: 0,
-                        transition: 'transform 0.3s, z-index 0s',
+                        transition: 'transform 0.3s',
+                        position: 'relative',
                         zIndex: 1,
                         '&:hover': {
                           transform: 'scale(1.3)',
-                          zIndex: 20,
-                        },
+                          zIndex: 10,
+                        }
                       }}
                     >
                       <MovieItemComponent movie={movie} onOpenModal={onOpenModal} onOpenPlayMovie={onOpenPlayMovie} />
                     </Box>
                   </Box>
                 ))}
-                <Box sx={{mr:3}}></Box>
+                <Box sx={{ mr: 3 }}></Box>
               </Box>
-              {showRightChevron && (
-                <IconButton onClick={scrollRight} sx={{ ml: 2 }}>
+              {chevronVisibility[genre]?.right && (
+                <IconButton onClick={() => scrollRight(genre)} sx={{ ml: 2 }}>
                   <ChevronRightIcon style={{ color: 'white' }} />
                 </IconButton>
               )}

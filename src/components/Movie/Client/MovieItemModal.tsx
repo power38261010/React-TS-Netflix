@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { rateMovie } from '../../../app/slices/moviesSlice';
 import { AppDispatch } from '../../../app/store';
 import { useDispatch } from 'react-redux';
-import { AnimatedIconButton} from './EmotionRateMovie';
+import { AnimatedIconButton} from './AnimationRateMovie';
 
 interface MovieItemModalProps {
   movie: Movie | null;

@@ -10,7 +10,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { rateMovie } from '../../../app/slices/moviesSlice';
 import { AppDispatch } from '../../../app/store';
 import { useDispatch } from 'react-redux';
-import { AnimatedIconButton} from './EmotionRateMovie';
+import { AnimatedIconButton} from './AnimationRateMovie';
 interface MovieItemComponentProps {
   movie: Movie;
   onOpenModal: (movie: Movie) => void;
@@ -70,7 +70,7 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
               bottom: 0,
               left: 0,
               width: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'rgba(0, 0, 0, 1)',
               color: 'white',
               padding: '10px',
               boxSizing: 'border-box',
