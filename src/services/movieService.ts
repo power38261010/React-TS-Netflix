@@ -7,11 +7,11 @@ class MovieService {
 
   async rateMovie(id: number, isLike: boolean): Promise<boolean> {
     try {
-      await api.put(`/rating/${id}/${isLike}`);
+      await api.put(`/movies/rating/${id}/${isLike}`);
       return true;
     } catch (error) {
       console.error(`Error to rate movie with ID ${id}:`, error);
-      reload ()
+      // reload ()
       return false;
     }
   }

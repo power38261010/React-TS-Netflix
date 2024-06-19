@@ -4,18 +4,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MovieItemComponent from './MovieItemComponent';
 import { Movie } from '../../../app/interfaces/Movie';
+import {genres} from '../../Helpers';
 
 interface CarrouselMoviesComponentProps {
   movies: Movie[];
   onOpenModal: (movie: Movie) => void;
   onOpenPlayMovie: (movie: Movie) => void;
 }
-
-const genres = [
-  "Accion", "Drama", "Belico", "Comedia", "Ciencia-Ficcion",
-  "Suspenso", "Aventura", "Fantasia", "Horror", "Documental",
-  "Futurista", "Retro"
-];
 
 const CarrouselMoviesComponent: React.FC<CarrouselMoviesComponentProps> = ({ movies, onOpenModal, onOpenPlayMovie }) => {
   const genreRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});

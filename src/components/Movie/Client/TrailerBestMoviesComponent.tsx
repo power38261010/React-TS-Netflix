@@ -5,6 +5,7 @@ import { searchMovies } from '../../../app/slices/moviesSlice';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import styles from './TrailerBestMoviesComponent.module.css';
 import { useInView } from 'react-intersection-observer';
+import { roundToTwoDecimals } from '../../Helpers';
 
 const TrailerBestMoviesComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -58,8 +59,8 @@ const TrailerBestMoviesComponent: React.FC = () => {
     setVideoError(true);
   };
 
-  const onPlayerReady = (event: { target: { playVideo: () => void; }; }) => {
-    if(event?.target) {
+  const onPlayerReady = (event: any) => {
+    if (event?.target) {
       event?.target?.playVideo();
       playerRef.current = event?.target;
     }
@@ -73,17 +74,21 @@ const TrailerBestMoviesComponent: React.FC = () => {
 
   const handleSlideChange = (index: number) => {
     setCurrentTrailerIndex(index);
-    playerRef.current?.playVideo();
+    if (playerRef.current) {
+      playerRef.current.playVideo();
+    }
   };
 
   const { ref } = useInView({
-    threshold: 0.6, // Umbral del 60%
+    threshold: 0.7, // Umbral del 70%
     onChange: (inView) => {
       setIsVisible(inView);
       if (!inView) {
         // Si no está visible, pausar el video
         playerRef.current?.pauseVideo();
-      } else playerRef.current?.playVideo();
+      } else {
+        playerRef.current?.playVideo();
+      }
     },
   });
 
@@ -106,7 +111,7 @@ const TrailerBestMoviesComponent: React.FC = () => {
         {currentTrailer ? (
           <>
             <h2>{currentTrailer.title}</h2>
-            <div className={styles.rating}>Ranking: {currentTrailer.rating}</div>
+            <div className={styles.rating}>Ranking: {roundToTwoDecimals(currentTrailer.rating)}</div>
           </>
         ) : (
           <div>No hay trailers disponibles</div>

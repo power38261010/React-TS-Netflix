@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
 import YouTube from 'react-youtube';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,6 +12,7 @@ import { rateMovie } from '../../../app/slices/moviesSlice';
 import { AppDispatch } from '../../../app/store';
 import { useDispatch } from 'react-redux';
 import { AnimatedIconButton} from './AnimationRateMovie';
+import styles from './TrailerBestMoviesComponent.module.css';
 
 interface MovieItemModalProps {
   movie: Movie | null;
@@ -24,7 +25,24 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
+  const [videoError, setVideoError] = useState(false);
+  const playerRef = useRef<any>(null);
+
   if (!movie) return null;
+
+  const videoId = movie?.trailerUrl?.split('v=')[1]?.split('&')[0];
+
+
+  const onPlayerReady = (event: any) => {
+    if (event?.target) {
+      event?.target?.playVideo();
+      playerRef.current = event?.target;
+    }
+  };
+
+  const handleVideoError = () => {
+    setVideoError(true);
+  };
 
   const rateThisMovie = (islikeIt: boolean) => {
     dispatch (rateMovie ({id:movie.id ,isLike:islikeIt }) )
@@ -36,7 +54,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
     playerVars: {
       autoplay: 1,
       loop: 1,
-      playlist: movie?.trailerUrl?.split('v=')[1].split('&')[0],
+      // playlist: movie?.trailerUrl?.split('v=')[1].split('&')[0],
       modestbranding: 1,
       rel: 0,
       iv_load_policy: 3,
@@ -54,7 +72,18 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
           <CloseIcon />
         </IconButton>
         <Box sx={{ mb: 2 }}>
-          <YouTube videoId={movie?.trailerUrl?.split('v=')[1].split('&')[0]} opts={opts} />
+          {videoError ? (
+              <div className={styles.errorPopup}>Video no disponible</div>
+            ) : (
+              videoId && (
+                <YouTube
+                  videoId={videoId}
+                  opts={opts}
+                  onReady={onPlayerReady}
+                  onError={handleVideoError}
+                />
+              )
+            )}
           <Box>
             <Typography variant="h4" sx={{ mb: 1 }}>{movie.title}</Typography>
           </Box>

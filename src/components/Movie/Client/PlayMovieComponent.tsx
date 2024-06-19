@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Modal, Box, IconButton } from '@mui/material';
 import YouTube from 'react-youtube';
 import CloseIcon from '@mui/icons-material/Close';
-
+import styles from './TrailerBestMoviesComponent.module.css';
 import { Movie } from '../../../app/interfaces/Movie';
 
 interface PlayMovieComponentProps {
@@ -11,9 +11,24 @@ interface PlayMovieComponentProps {
 }
 
 const PlayMovieComponent: React.FC<PlayMovieComponentProps> = ({ movie, onClosePlayMovie }) => {
+  const playerRef = useRef<any>(null);
+  const [videoError, setVideoError] = useState(false);
+
   if (!movie) return null;
 
+  const handleVideoError = () => {
+    setVideoError(true);
+  };
+
+  const onPlayerReady = (event: any) => {
+    if (event?.target) {
+      event?.target?.playVideo();
+      playerRef.current = event?.target;
+    }
+  };
+
   const videoId = movie?.trailerUrl?.split('v=')[1].split('&')[0];
+
   const opts = {
     width: '100%',
     height: '100%',
@@ -54,7 +69,19 @@ const PlayMovieComponent: React.FC<PlayMovieComponentProps> = ({ movie, onCloseP
           <CloseIcon />
         </IconButton>
         <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <YouTube videoId={videoId} opts={opts} style={{ width: '100%', height: '100%' }} />
+          {videoError ? (
+              <div className={styles.errorPopup}>Video no disponible</div>
+            ) : (
+              videoId && (
+                <YouTube
+                  videoId={videoId}
+                  opts={opts}
+                  onReady={onPlayerReady}
+                  onError={handleVideoError}
+                  style={{ width: '100%', height: '100%' }}
+                />
+              )
+            )}
         </Box>
       </Box>
     </Modal>

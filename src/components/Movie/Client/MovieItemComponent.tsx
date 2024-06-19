@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
@@ -10,7 +10,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { rateMovie } from '../../../app/slices/moviesSlice';
 import { AppDispatch } from '../../../app/store';
 import { useDispatch } from 'react-redux';
-import { AnimatedIconButton} from './AnimationRateMovie';
+import { AnimatedIconButton } from './AnimationRateMovie';
+import styles from './TrailerBestMoviesComponent.module.css';
+
 interface MovieItemComponentProps {
   movie: Movie;
   onOpenModal: (movie: Movie) => void;
@@ -18,13 +20,29 @@ interface MovieItemComponentProps {
 }
 
 const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenModal, onOpenPlayMovie }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const { profile } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
+  const { profile } = useAuth();
+  const playerRef = useRef<any>(null);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+
+  const handleVideoError = () => {
+    setVideoError(true);
+  };
+
+  const onPlayerReady = (event: any) => {
+    if (event?.target) {
+      event?.target?.playVideo();
+      playerRef.current = event?.target;
+    }
+  };
 
   const rateThisMovie = (islikeIt: boolean) => {
-    dispatch (rateMovie ({id:movie.id ,isLike:islikeIt }) )
-  }
+    dispatch(rateMovie({ id: movie.id, isLike: islikeIt }));
+  };
+
+  const videoId = movie?.trailerUrl?.split('v=')[1]?.split('&')[0];
 
   const opts = {
     height: '100%',
@@ -32,7 +50,6 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
     playerVars: {
       autoplay: 1,
       loop: 1,
-      playlist: movie?.trailerUrl?.split('v=')[1].split('&')[0],
       modestbranding: 1,
       rel: 0,
       iv_load_policy: 3,
@@ -63,7 +80,18 @@ const MovieItemComponent: React.FC<MovieItemComponentProps> = ({ movie, onOpenMo
             overflow: 'hidden',
           }}
         >
-          <YouTube videoId={movie?.trailerUrl?.split('v=')[1].split('&')[0]} opts={opts} />
+          {videoError ? (
+            <div className={styles.errorPopup}>Video no disponible</div>
+          ) : (
+            videoId && (
+              <YouTube
+                videoId={videoId}
+                opts={opts}
+                onReady={onPlayerReady}
+                onError={handleVideoError}
+              />
+            )
+          )}
           <Box
             sx={{
               position: 'absolute',
