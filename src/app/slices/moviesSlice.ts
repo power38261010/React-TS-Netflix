@@ -58,6 +58,45 @@ export const searchMovies = createAsyncThunk('movies/searchMovies',
   }
 );
 
+export const getBestMovies = createAsyncThunk('movies/getBestMovies',
+  async ({
+    title,
+    description,
+    genre,
+    operation,
+    releaseDate,
+    subscriptionType,
+    orderByProperty,
+    pageIndex,
+    pageSize
+  }: {
+    title?: string;
+    description?: string;
+    genre?: string;
+    operation?: string;
+    releaseDate?: Date;
+    subscriptionType?: number;
+    orderByProperty?: string;
+    pageIndex?: number;
+    pageSize?: number;
+  }) => {
+    let bestMoviesSlice = await movieService.searchMovies(
+      title,
+      description,
+      genre,
+      operation,
+      releaseDate,
+      subscriptionType,
+      orderByProperty,
+      pageIndex,
+      pageSize
+    );
+    console.log("bestMoviesSlice ",bestMoviesSlice)
+    let bms = [...bestMoviesSlice].sort((a, b) => (b?.rating ?? 0) - (a?.rating ?? 0));
+    return bms?.slice(0, 3);
+  }
+);
+
 export const rateMovie = createAsyncThunk('movies/rateMovie', async (rate: RateMovie)  => {
   let success = await movieService.rateMovie(rate.id, rate.isLike);
   let rateAux : RateMovie = {
@@ -72,12 +111,14 @@ export const rateMovie = createAsyncThunk('movies/rateMovie', async (rate: RateM
 
 interface MoviesState {
   movies: Movie[];
+  bestMovies: Movie[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: MoviesState = {
   movies: [],
+  bestMovies: [],
   loading: false,
   error: null,
 };
@@ -155,7 +196,14 @@ const moviesSlice = createSlice({
         state.loading = false;
         state.movies = action.payload;
       })
-      .addCase(searchMovies.rejected, handleRejected);
+      .addCase(searchMovies.rejected, handleRejected)
+
+      .addCase(getBestMovies.pending, handlePending)
+      .addCase(getBestMovies.fulfilled, (state, action: PayloadAction<Movie[]>) => {
+        state.loading = false;
+        state.bestMovies = action.payload;
+      })
+      .addCase(getBestMovies.rejected, handleRejected);
   },
 });
 

@@ -85,6 +85,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
     },
     '& .MuiInputLabel-root': { color: '#fff' },
     '& .MuiFormHelperText-root': { color: '#fff' },
+    '& .MuiFormLabel-root-MuiInputLabel-root.Mui-disabled ': { color: '#fff'},
   };
 
   return (
@@ -201,12 +202,12 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
         </Typography>
         <Typography variant="body1"  sx={{ mb: 2 }}>
           Estado: {profile?.isPaid ? 'Pagado' : 'No Pagado'}{'         '}
-          <Button variant="contained" color="secondary" size="small" sx={{ ml:3 }} onClick={renewSubscription}>
+          <Button variant="contained" color="warning" size="small" sx={{ ml:3, background:'red' }} onClick={renewSubscription}>
             {profile?.isPaid ? "Cambiar Subscripción" : "Renovar Subscripción"}
           </Button>
         </Typography>
         <Typography variant="body1" sx={{ mb: 2 }}>
-          Fecha de Caducación: { !!profile?.expirationDate ? profile?.expirationDate.toString().split('T')[0] : "Sin Fecha"}
+          Fecha de Caducación: { !!profile?.expirationDate ? profile?.expirationDate.toString().split('T')[0].split('-').reverse().join('/') : "Sin Fecha"}
         </Typography>
 
         {(  profileState.username !== profile?.username || (profileState.email !== profile?.email && profileState.email !== '') ||

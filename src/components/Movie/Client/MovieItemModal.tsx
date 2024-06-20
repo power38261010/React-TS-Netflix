@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Modal, Box, Typography, IconButton, Button } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import YouTube from 'react-youtube';
 import CloseIcon from '@mui/icons-material/Close';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { Movie } from '../../../app/interfaces/Movie';
@@ -54,7 +54,6 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
     playerVars: {
       autoplay: 1,
       loop: 1,
-      // playlist: movie?.trailerUrl?.split('v=')[1].split('&')[0],
       modestbranding: 1,
       rel: 0,
       iv_load_policy: 3,
@@ -84,14 +83,22 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
                 />
               )
             )}
-          <Box>
-            <Typography variant="h4" sx={{ mb: 1 }}>{movie.title}</Typography>
-          </Box>
+            <div className={styles.movieInfoModal}>
+            {! videoError ? (
+              <>
+                <Typography variant="h6" sx={{ mb: 1 }}>{movie.title}</Typography>
+              </>
+            ) : (
+              <div>No hay trailers disponibles</div>
+            )}
+            </div>
+          {/* <Box>
+          </Box> */}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Button
             variant="contained"
-            color="primary"
+            startIcon={<PlayArrowIcon />}
             onClick={() => {
               if ( !!profile && profile?.isPaid ) {
                 onClose();
@@ -100,11 +107,22 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
                 navigate('/payment-create');
               }
             }}
-            sx={{ mr: 2, display: 'flex', alignItems: 'center' }}
+            sx={{
+              mr: 2, display: 'flex', alignItems: 'center',
+              backgroundColor: '#fff',
+              color: '#000',
+              padding: '8px 24px',
+              fontSize: '16px',
+              textTransform: 'none',
+              borderRadius: '4px',
+              '&:hover': {
+                backgroundColor: '#777',
+              },
+            }}
           >
-            {profile?.isPaid && (<PlayCircleIcon sx={{ mr: 1 }} />)}
-            {profile?.isPaid ? "Reproducir" : "Renueva tu Subscripcion"}
+            {profile?.isPaid ? "Reproducir" : "Renueve su Subscripcion"}
           </Button>
+
           <AnimatedIconButton onClick={() => rateThisMovie(true)} sx={{ color: 'white' }}>
             <ThumbUpIcon />
           </AnimatedIconButton>

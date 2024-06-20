@@ -7,6 +7,7 @@ import { AppDispatch } from '../app/store';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getAllWayPayments } from '../app/slices/paymentSubscriptionSlice';
+import { getBestMovies } from '../app/slices/moviesSlice';
 
 const LoadingScreen = () => {
   const { profile, token } = useAuth();
@@ -22,6 +23,7 @@ const LoadingScreen = () => {
   }
   useEffect(() => {
     dispatch(searchMovies({}));
+    dispatch(getBestMovies({}));
     dispatch(getAllWayPayments());
     dispatch(getAllSubscriptions());
     if (profile !== null && token !== null )

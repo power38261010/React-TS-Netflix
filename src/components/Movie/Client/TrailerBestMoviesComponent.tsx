@@ -1,43 +1,59 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../app/store';
-import { searchMovies } from '../../../app/slices/moviesSlice';
+import { getBestMovies, searchMovies } from '../../../app/slices/moviesSlice';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import styles from './TrailerBestMoviesComponent.module.css';
 import { useInView } from 'react-intersection-observer';
 import { roundToTwoDecimals } from '../../Helpers';
+import { Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import Info from '@mui/icons-material/Info';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Movie } from '../../../app/interfaces/Movie';
+import { genres } from '../../Helpers';
 
-const TrailerBestMoviesComponent: React.FC = () => {
+interface TrailerBestMoviesProps {
+  onOpenPlayMovie: (movie: Movie) => void;
+  onOpenModal: (movie: Movie) => void;
+}
+
+const TIME_TRANSITION_BEST_MOVIES = parseInt(process.env.TIME_TRANSITION_BEST_MOVIES ?? "60") * 1000
+
+const TrailerBestMoviesComponent: React.FC<TrailerBestMoviesProps> = ({ onOpenPlayMovie, onOpenModal }) => {
+
+  const { profile } = useAuth();
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { movies } = useSelector((state: RootState) => state.movies);
+  const { bestMovies} = useSelector((state: RootState) => state.movies);
 
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
+  const [genre, setGenre] = useState<string>("");
   const [videoError, setVideoError] = useState(false);
   const playerRef = useRef<any>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    dispatch(searchMovies({}));
-  }, [dispatch]);
+  dispatch(getBestMovies({}));
+
+    dispatch(searchMovies({ genre: genre }));
+  }, [dispatch, genre]);
 
   useEffect(() => {
-    if (movies.length > 0) {
-      const sortedMovies = [...movies].sort((a, b) => (b?.rating ?? 0) - (a?.rating ?? 0));
-      const topThreeMovies = sortedMovies?.slice(0, 3);
+    if (bestMovies.length > 0) {
 
       const timer = setInterval(() => {
         if (isVisible) {
-          setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % topThreeMovies.length);
+          setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % bestMovies.length);
         }
-      }, 60000); // Cambiar tráiler cada 60 segundos
+      }, TIME_TRANSITION_BEST_MOVIES);
 
       return () => clearInterval(timer);
     }
-  }, [movies, isVisible]);
+  }, [bestMovies, isVisible]);
 
-  const sortedMovies = [...movies].sort((a, b) => (b?.rating ?? 0) - (a?.rating ?? 0));
-  const topThreeMovies = sortedMovies.slice(0, 3);
-  const currentTrailer = topThreeMovies[currentTrailerIndex];
+  const currentTrailer = bestMovies[currentTrailerIndex];
   const videoId = currentTrailer?.trailerUrl?.split('v=')[1]?.split('&')[0];
 
   const opts: YouTubeProps['opts'] = {
@@ -68,7 +84,7 @@ const TrailerBestMoviesComponent: React.FC = () => {
 
   const onPlayerStateChange = (event: { data: number }) => {
     if (event.data === 0) {
-      setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % topThreeMovies.length);
+      setCurrentTrailerIndex((prevIndex) => (prevIndex + 1) % bestMovies.length);
     }
   };
 
@@ -80,11 +96,10 @@ const TrailerBestMoviesComponent: React.FC = () => {
   };
 
   const { ref } = useInView({
-    threshold: 0.7, // Umbral del 70%
+    threshold: 0.73,
     onChange: (inView) => {
       setIsVisible(inView);
       if (!inView) {
-        // Si no está visible, pausar el video
         playerRef.current?.pauseVideo();
       } else {
         playerRef.current?.playVideo();
@@ -92,8 +107,42 @@ const TrailerBestMoviesComponent: React.FC = () => {
     },
   });
 
+  const selectStyles = {
+    mb: 2,
+    '& .MuiInputBase-input': { color: '#fff' },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': { borderColor: '#fff' },
+      '&:hover fieldset': { borderColor: '#fff' },
+      '&.Mui-focused fieldset': { borderColor: '#fff' },
+    },
+    '& .MuiInputLabel-root': { color: '#fff' },
+    '& .MuiFormHelperText-root': { color: '#fff' },
+    '& .MuiSelect-icon': { color: '#fff' },
+    '& .MuiPaper-root': {
+      backgroundColor: '#000',
+      color: '#fff',
+    },
+  };
+
   return (
     <div className={styles.trailerContainer} ref={ref}>
+      <div className={styles.genreSelectContainer}>
+        <FormControl variant="outlined" fullWidth sx={selectStyles}>
+          <InputLabel id="genre-select-label">Género</InputLabel>
+          <Select
+            labelId="genre-select-label"
+            id="genre-select"
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            label="Género"
+          >
+            <MenuItem key="Todos" selected={ (genre === '') } value=""><em>Todos</em></MenuItem>
+            {genres.map((genre) => (
+              <MenuItem key={genre} value={genre}>{genre}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
       {videoError ? (
         <div className={styles.errorPopup}>Video no disponible</div>
       ) : (
@@ -117,15 +166,66 @@ const TrailerBestMoviesComponent: React.FC = () => {
           <div>No hay trailers disponibles</div>
         )}
       </div>
+      <div className={styles.moviePlay}>
+        <Button
+          variant="contained"
+          startIcon={<PlayArrowIcon sx={{ height: 15 }} />}
+          onClick={() => {
+            playerRef.current?.pauseVideo();
+            if (!!profile && profile?.isPaid) {
+              onOpenPlayMovie(currentTrailer);
+            } else {
+              navigate('/payment-create');
+            }
+          }}
+          sx={{
+            mr: 2,
+            bottom: 2,
+            left: 2,
+            backgroundColor: '#fff',
+            color: '#000',
+            fontSize: '24px',
+            textTransform: 'none',
+            borderRadius: '6px',
+            '&:hover': {
+              backgroundColor: '#777',
+            },
+          }}
+        >
+          {profile?.isPaid ? "Reproducir" : "Renueve su Subscripcion"}
+        </Button>
+
+        <Button
+          variant="contained"
+          startIcon={<Info fontSize='large' />}
+          onClick={() => {
+            playerRef.current?.pauseVideo();
+            onOpenModal(currentTrailer);
+          }}
+          sx={{
+            mr: 2,
+            bottom: 2,
+            left: 2,
+            backgroundColor: '#777',
+            color: '#fff',
+            fontSize: '24px',
+            textTransform: 'none',
+            borderRadius: '6px',
+            '&:hover': {
+              backgroundColor: '#555',
+            },
+          }}
+        >
+          Más información
+        </Button>
+      </div>
       <div className={styles.slideControls}>
-        {topThreeMovies.map((_, index) => (
+        {bestMovies.map((_, index) => (
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
             className={index === currentTrailerIndex ? styles.activeSlide : ''}
-          >
-            {/* {index + 1} */}
-          </button>
+          />
         ))}
       </div>
     </div>
