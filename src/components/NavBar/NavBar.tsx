@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './NavBar.module.css';
@@ -18,6 +18,22 @@ const NavBar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -46,7 +62,7 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.logo}>
         <img src={logoNetflix} alt="Netflix Logo" />
       </div>
@@ -82,19 +98,21 @@ const NavBar: React.FC = () => {
           </>
         )}
       </div>
-      <div className={styles.searchContainer}>
-        <div className={styles.search}>
-          <input
-            type="text"
-            placeholder="Buscar"
-            className={styles.searchInput}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <SearchIcon className={styles.searchIcon} onClick={handleSearch} />
+      {profile?.role === 'client' && (
+        <div className={styles.searchContainer}>
+          <div className={styles.search}>
+            <input
+              type="text"
+              placeholder="Buscar"
+              className={styles.searchInput}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <SearchIcon className={styles.searchIcon} onClick={handleSearch} />
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.actions}>
         {isAuthenticated ? (
           <div

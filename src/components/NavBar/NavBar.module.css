@@ -12,6 +12,11 @@
   left: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.header.scrolled {
+  background-color: #000000;
 }
 
 .logo {
@@ -26,7 +31,8 @@
   display: flex;
   gap: 20px;
   flex-grow: 1;
-  justify-content: center;
+  justify-content: left;
+  margin-left: 8vh;
 }
 
 .navLink {
@@ -101,6 +107,7 @@
 /* Estilos para el componente de búsqueda */
 .searchContainer {
   margin-left: auto; /* Alinea el contenedor de búsqueda al extremo derecho */
+  margin-right: 4px;
   display: flex;
   align-items: center; /* Alinea verticalmente */
 }
