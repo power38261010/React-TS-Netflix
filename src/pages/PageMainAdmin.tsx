@@ -7,7 +7,7 @@ const MovieAdminApp: React.FC = () => {
 
   return (
     <>
-        <Box sx={{ bgcolor: '#141414'}}>
+        <Box sx={{ bgcolor: '#141414', height: '100vh' }}>
           <MovieComponent />
         </Box>
     </>

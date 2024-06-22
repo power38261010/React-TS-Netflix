@@ -49,6 +49,9 @@
 .tableContainer {
   background-color: #000;
   color: #fff;
+  display: flex;
+  justify-content: center;
+  height: 100%;
 }
 
 .cell {
@@ -111,4 +114,14 @@
   background-color: #444; /* Color de la barra */
   border-radius: 6px;
   border: 2px solid #000; /* Borde alrededor de la barra */
+}
+
+.shortenDescription {
+  max-height: 60px; /* Altura máxima deseada */
+  max-Width: 260px; /* Altura máxima deseada */
+  overflow: hidden; /* Oculta el texto que excede el límite de altura */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos al final del texto truncado */
+  white-space: nowrap; /* Evita el salto de línea */
+  padding: 10px;
+  color:#fff;
 }

@@ -8,12 +8,10 @@ class UserService {
       return response.data;
     } catch (error) {
       console.error(`Error fetching user with ID ${id}:`, error);
-      reload();
+      // reload();
       return null;
     }
   }
-
-
 
   async softDeleteUser(id: number): Promise<boolean> {
     try {
@@ -21,10 +19,22 @@ class UserService {
       return true;
     } catch (error) {
       console.error(`Error soft deleting user with ID ${id}:`, error);
-      reload();
+      // reload();
       return false;
     }
   }
+
+  async upUser(id: number, role:string ): Promise<boolean> {
+    try {
+      await api.put(`/users/softdelete/${id}/${role}`);
+      return true;
+    } catch (error) {
+      console.error(`Error soft deleting user with ID ${id}:`, error);
+      // reload();
+      return false;
+    }
+  }
+  // /up-user/{id}/{role}
 
   async searchUsers(
     username?: string,
@@ -50,7 +60,7 @@ class UserService {
       return response.data;
     } catch (error) {
       console.error('Error searching users:', error);
-      reload();
+      // reload();
       return [];
     }
   }

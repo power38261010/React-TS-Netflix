@@ -138,7 +138,7 @@ const NavBar: React.FC = () => {
           )
         )}
       </div>
-      <ProfileManager isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <ProfileManager isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  />
     </header>
   );
 };

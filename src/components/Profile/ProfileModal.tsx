@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,6 +31,17 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
     passwordHash: '',
     passwordHashNew: '',
   });
+
+  useEffect(() => {
+    setProfileState({
+      id: profile?.id ?? 0,
+      username: profile?.username ?? '',
+      email: profile?.email ?? '',
+      passwordHash: '',
+      passwordHashNew: '',
+    });
+  }, [profile]);
+
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleEditClick = (field: boolean) => {
@@ -185,18 +196,22 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
             </Typography>
           </Box>
         )}
-        <Typography variant="body1" sx={{ mt: 2 , mb: 2 }}>
-          Subscripción: {profile?.subscription?.type ? profile?.subscription?.type :'Sin Subscripción'}
-        </Typography>
-        <Typography variant="body1"  sx={{ mb: 2 }}>
-          Estado: {profile?.isPaid ? 'Pagado' : 'No Pagado'}{'         '}
-          <Button variant="contained" color="warning" size="small" sx={{ ml:3, background:'red' }} onClick={renewSubscription}>
-            {profile?.isPaid ? "Cambiar Subscripción" : "Renovar Subscripción"}
-          </Button>
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Fecha de Caducación: { !!profile?.expirationDate ? profile?.expirationDate.toString().split('T')[0].split('-').reverse().join('/') : "Sin Fecha"}
-        </Typography>
+        { profile?.role === 'client' && (
+          <>
+            <Typography variant="body1" sx={{ mt: 2 , mb: 2 }}>
+              Subscripción: {profile?.subscription?.type ? profile?.subscription?.type :'Sin Subscripción'}
+            </Typography>
+            <Typography variant="body1"  sx={{ mb: 2 }}>
+              Estado: {profile?.isPaid ? 'Pagado' : 'No Pagado'}{'         '}
+              <Button variant="contained" color="warning" size="small" sx={{ ml:3, background:'red' }} onClick={renewSubscription}>
+                {profile?.isPaid ? "Cambiar Subscripción" : "Renovar Subscripción"}
+              </Button>
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Fecha de Caducación: { !!profile?.expirationDate ? profile?.expirationDate.toString().split('T')[0].split('-').reverse().join('/') : "Sin Fecha"}
+            </Typography>
+          </>
+        )}
 
         {(  profileState.username !== profile?.username || (profileState.email !== profile?.email && profileState.email !== '') ||
         (( profileState.passwordHash !== '' && profileState.passwordHashNew !== '') && confirmPassword === profileState.passwordHashNew )) &&

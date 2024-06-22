@@ -40,10 +40,25 @@ export const softDeleteUser = createAsyncThunk('users/softDeleteUser', async (id
   return id;
 });
 
+export const upUser = createAsyncThunk('users/upUser', async (userRole: UpdateRole ) => {
+  let success = await userService.upUser(userRole.id,userRole.role);
+
+  var RoleUser : UpdateRole = { id:0, role:'' }
+  if ( success ) {
+    return RoleUser = userRole;
+  }
+  return  RoleUser;
+});
+
 interface UsersState {
   users: User[];
   loading: boolean;
   error: string | null;
+}
+
+interface UpdateRole {
+  id: number;
+  role: string;
 }
 
 const initialState: UsersState = {
@@ -105,6 +120,16 @@ const usersSlice = createSlice({
         state.users = state.users.filter(user => user.id !== action.payload);
       })
       .addCase(softDeleteUser.rejected, handleRejected)
+
+      .addCase(upUser.pending, handlePending)
+      .addCase(upUser.fulfilled, (state, action: PayloadAction<UpdateRole>) => {
+        state.loading = false;
+        const index = state.users.findIndex(user => user.id === action.payload.id);
+        if (index !== -1) {
+          state.users[index].role = action.payload.role;
+        }
+      })
+      .addCase(upUser.rejected, handleRejected);
   },
 });
 
