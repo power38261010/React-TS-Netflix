@@ -50,3 +50,13 @@
   border-radius: 6px;
   border: 2px solid #000; /* Borde alrededor de la barra */
 }
+
+.TextAreaBox::-webkit-scrollbar-track {
+  background: #000; /* Color de fondo de la barra */
+}
+
+.TextAreaBox::-webkit-scrollbar-thumb {
+  background-color: #444; /* Color de la barra */
+  border-radius: 6px;
+  border: 2px solid #000; /* Borde alrededor de la barra */
+}

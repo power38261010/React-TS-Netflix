@@ -22,7 +22,7 @@ class MovieService {
       return true;
     } catch (error) {
       console.error('Error creating movie:', error);
-      reload ()
+      // reload ()
       return false;
     }
   }
@@ -33,7 +33,7 @@ class MovieService {
       return true;
     } catch (error) {
       console.error(`Error updating movie with ID ${id}:`, error);
-      reload ()
+      // reload ()
       return false;
     }
   }
@@ -44,7 +44,7 @@ class MovieService {
       return true;
     } catch (error) {
       console.error(`Error deleting movie with ID ${id}:`, error);
-      reload ()
+      // reload ()
       return false;
     }
   }
@@ -79,7 +79,7 @@ class MovieService {
       return response.data;
     } catch (error) {
       console.error('Error searching movies:', error);
-      reload ()
+      // reload ()
       return [];
     }
   }

@@ -135,7 +135,7 @@ const MovieComponent: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            size='small'
+            size='medium'
             onClick={() => {
               setAnyMovie({
                 id: 0,
