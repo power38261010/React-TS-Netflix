@@ -13,6 +13,7 @@ import { AppDispatch } from '../../../app/store';
 import { useDispatch } from 'react-redux';
 import { AnimatedIconButton} from './AnimationRateMovie';
 import styles from './TrailerBestMoviesComponent.module.css';
+import { roundToTwoDecimals } from '../../Helpers';
 
 interface MovieItemModalProps {
   movie: Movie | null;
@@ -92,8 +93,6 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
               <div>No hay trailers disponibles</div>
             )}
             </div>
-          {/* <Box>
-          </Box> */}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Button
@@ -138,7 +137,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({ movie, onClose, onOpenP
           </Box>
           <Box sx={{ flex: 1 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Rating: </strong> {movie.rating}
+              <strong>Rating: </strong> {roundToTwoDecimals(movie.rating)}
             </Typography>
           </Box>
         </Box>

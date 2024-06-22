@@ -1,4 +1,3 @@
-// MovieItemModal.tsx
 import React, { useRef, useState } from 'react';
 import {
   Modal,
@@ -8,35 +7,36 @@ import {
   Button,
   TextField,
   MenuItem,
-  Select
+  Select,
+  FormControl,
+  InputLabel,
+  Chip
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import YouTube from 'react-youtube';
 import { Movie } from '../../../app/interfaces/Movie';
-import { MovieSubscriptionDto } from '../../../app/interfaces/MovieSubscription';
 import styles from './MovieItemModal.module.css';
-import { genres } from '../../Helpers';
+import { genres, roundToTwoDecimals } from '../../Helpers';
+import { inputStyles , selectStyles} from '../../Helpers';
+import { useDispatch } from 'react-redux';
+import {  AppDispatch } from '../../../app/store';
+import { createMovie, updateMovie } from '../../../app/slices/moviesSlice';
+import { MovieSubscriptionDto } from '../../../app/interfaces/MovieSubscription';
 
 interface MovieItemModalProps {
   movie: Movie | null;
   onClose: () => void;
   isCreate: boolean;
-  handleCreateMovie: () => void;
-  handleUpdateMovie: () => void;
   subscriptions: any[];
-  handlePushSubscription: (e: React.ChangeEvent<{ value: unknown }>) => void;
-  handleRemoveSubscription: (subscriptionId: number) => void;
+  setOpenModal: (e: boolean) => void;
 }
 
 const MovieItemModal: React.FC<MovieItemModalProps> = ({
   movie,
   onClose,
   isCreate,
-  handleCreateMovie,
-  handleUpdateMovie,
   subscriptions,
-  handlePushSubscription,
-  handleRemoveSubscription
+  setOpenModal,
 }) => {
   const [stateMovie, setStateMovie] = useState<Movie>(movie || {
     id: 0,
@@ -49,6 +49,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
     rating: 0,
     movieSubscriptions: [],
   });
+  const dispatch = useDispatch<AppDispatch>();
 
   const [videoError, setVideoError] = useState(false);
   const playerRef = useRef<any>(null);
@@ -70,13 +71,49 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
     setStateMovie({ ...stateMovie, [e.target.name]: e.target.value });
   };
 
+  const getTypesSubscription = (moviesSub: MovieSubscriptionDto[]) => {
+    let idsSubs = moviesSub?.map(ms => ms.subscriptionId);
+    let matchSub = subscriptions?.filter(s => idsSubs?.includes(s.id))?.map(sf => sf.type);
+    return matchSub?.join(', ');
+  };
+
+  const handlePushSubscription = (e: React.ChangeEvent<{ value: unknown }>) => {
+    let ms: MovieSubscriptionDto[] = [];
+    if (stateMovie?.movieSubscriptions && stateMovie.movieSubscriptions.length > 0) ms = [...stateMovie.movieSubscriptions];
+    ms.push(anyMovieSubscription(stateMovie.id, parseInt(e.target.value as string) ?? 0));
+    setStateMovie({ ...stateMovie, movieSubscriptions: ms });
+  };
+
+  const handleRemoveSubscription = (subscriptionId: number) => {
+    let ms: MovieSubscriptionDto[] = [];
+    if (stateMovie?.movieSubscriptions && stateMovie.movieSubscriptions.length > 0) {
+      ms = [...stateMovie.movieSubscriptions];
+      ms = ms.filter(item => item.subscriptionId !== subscriptionId);
+      setStateMovie({ ...stateMovie, movieSubscriptions: ms });
+    }
+  };
+
+  const anyMovieSubscription = (movieID: number, subscriptionID: number): MovieSubscriptionDto => {
+    return { movieId: movieID, subscriptionId: subscriptionID };
+  };
+
+  const handleCreateMovie = () => {
+    dispatch(createMovie(stateMovie));
+    setOpenModal(false);
+  };
+
+  const handleUpdateMovie = () => {
+    dispatch(updateMovie( stateMovie));
+    setOpenModal(false);
+  };
+
   return (
     <Modal open={!!movie} onClose={onClose} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Box sx={{ width: '800px', bgcolor: 'black', color: 'white', p: 4, position: 'relative', borderRadius: 1 }}>
+      <Box className={styles.modalBox}>
         <IconButton onClick={onClose} sx={{ position: 'absolute', top: 8, right: 8, color: 'white' }}>
           <CloseIcon />
         </IconButton>
-        <Box sx={{ mb: 2 }}>
+        <Box className={styles.modalContent}>
           {videoError ? (
             <div className={styles.errorPopup}>Video no disponible</div>
           ) : (
@@ -104,9 +141,19 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
             )
           )}
           <div className={styles.movieInfoModal}>
+          <TextField
+              label="URL del Trailer"
+              name="trailerUrl"
+              sx={inputStyles}
+              value={stateMovie.trailerUrl}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
             <TextField
               label="Título"
               name="title"
+              sx={inputStyles}
               value={stateMovie.title}
               onChange={handleInputChange}
               fullWidth
@@ -122,6 +169,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
             <TextField
               label="URL del Poster"
               name="posterUrl"
+              sx={inputStyles}
               value={stateMovie.posterUrl}
               onChange={handleInputChange}
               fullWidth
@@ -131,8 +179,11 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ flex: 1, mr: 2 }}>
+          <FormControl variant="outlined" size='small' fullWidth  sx={selectStyles }>
+            <InputLabel id="genres-select-label">Géneros</InputLabel>
             <Select
               multiple
+              sx={selectStyles}
               value={stateMovie?.genre?.split(' ') }
               onChange={(e) => setStateMovie({ ...stateMovie, genre: (e.target.value as string[]).join(' ') })}
               displayEmpty
@@ -143,13 +194,30 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
                 <MenuItem key={g} value={g}>{g}</MenuItem>
               ))}
             </Select>
+            </FormControl>
+
           </Box>
           <Box sx={{ flex: 1, mr: 2 }}>
+          <FormControl variant="outlined" size='small' fullWidth  sx={selectStyles }>
+          <InputLabel id="subscriptions-select-label">Subscripciones</InputLabel>
             <Select
               multiple
+              sx={selectStyles}
               value={stateMovie?.movieSubscriptions?.map(ms => ms.subscriptionId)}
-              onChange={()=>handlePushSubscription}
+              onChange={() => handlePushSubscription}
               displayEmpty
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip
+                      key={value}
+                      label={subscriptions.find((sub) => sub.id === value)?.type}
+                      onDelete={() => handleRemoveSubscription(value)}
+                      sx={{ backgroundColor: '#000', color: '#fff' }}
+                    />
+                  ))}
+                </Box>
+              )}
               fullWidth
               className={styles.selector}
             >
@@ -157,12 +225,15 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
                 <MenuItem key={sub.id} value={sub.id}>{sub.type}</MenuItem>
               ))}
             </Select>
+            </FormControl>
+
           </Box>
           <Box sx={{ flex: 1 }}>
             <TextField
               label="Rating"
               name="rating"
-              value={stateMovie.rating}
+              sx={inputStyles}
+              value={roundToTwoDecimals(stateMovie.rating)}
               onChange={handleInputChange}
               fullWidth
               margin="normal"
@@ -174,6 +245,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
           <TextField
             label="Descripción"
             name="description"
+            sx={inputStyles}
             value={stateMovie.description}
             onChange={handleInputChange}
             multiline
@@ -182,7 +254,7 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
             margin="normal"
           />
         </Box>
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ display:'flex',justifyContent: 'center', mb:4 }}>
           <Button
             variant="contained"
             color="primary"
