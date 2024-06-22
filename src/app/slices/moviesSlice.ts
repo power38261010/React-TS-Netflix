@@ -45,15 +45,15 @@ export const searchMovies = createAsyncThunk('movies/searchMovies',
     pageSize?: number;
   }) => {
     return movieService.searchMovies(
-      title,
-      description,
-      genre,
-      operation,
-      releaseDate,
-      subscriptionType,
-      orderByProperty,
-      pageIndex,
-      pageSize
+      title,//titulo
+      description, //descripcion de la peliucla
+      genre, // genero
+      operation, // operacion( '==' , '<=','>=', '!=' ) -> where movie.releaseDate "operacion" params.releaseDate
+      releaseDate, // releaseDate (params.releaseDate)
+      subscriptionType, // subscription.id
+      orderByProperty, // irrelevante
+      pageIndex, // indice -> paginado ( Siguiente y Anterior)
+      pageSize // tamaño en cantidad de registros -> paginado
     );
   }
 );

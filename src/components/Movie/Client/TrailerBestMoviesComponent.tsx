@@ -5,7 +5,7 @@ import { getBestMovies, searchMovies } from '../../../app/slices/moviesSlice';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import styles from './TrailerBestMoviesComponent.module.css';
 import { useInView } from 'react-intersection-observer';
-import { roundToTwoDecimals } from '../../Helpers';
+import { roundToTwoDecimals, selectStyles } from '../../Helpers';
 import { Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Info from '@mui/icons-material/Info';
@@ -107,22 +107,7 @@ const TrailerBestMoviesComponent: React.FC<TrailerBestMoviesProps> = ({ onOpenPl
     },
   });
 
-  const selectStyles = {
-    mb: 2,
-    '& .MuiInputBase-input': { color: '#fff' },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': { borderColor: '#fff' },
-      '&:hover fieldset': { borderColor: '#fff' },
-      '&.Mui-focused fieldset': { borderColor: '#fff' },
-    },
-    '& .MuiInputLabel-root': { color: '#fff' },
-    '& .MuiFormHelperText-root': { color: '#fff' },
-    '& .MuiSelect-icon': { color: '#fff' },
-    '& .MuiPaper-root': {
-      backgroundColor: '#000',
-      color: '#fff',
-    },
-  };
+
 
   return (
     <div className={styles.trailerContainer} ref={ref}>

@@ -28,7 +28,7 @@ const LoadingScreen = () => {
     dispatch(getAllSubscriptions());
     if (profile !== null && token !== null )
       {
-          if (["admin","super_admin"].includes(profile.role))  navigate('/admin-dashboard');
+          if (["admin","super_admin"].includes(profile.role))  navigate('/admin-content');
           else navigate('/movies-netflix');
         }
   }, [dispatch]);

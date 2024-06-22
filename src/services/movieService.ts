@@ -74,6 +74,7 @@ class MovieService {
           pageSize
         }
       });
+      console.log("response m " ,response);
       console.log("movies " ,response.data);
       return response.data;
     } catch (error) {

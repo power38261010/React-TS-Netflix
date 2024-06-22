@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { ProfileUpdate } from '../../app/interfaces/ProfileUpdate';
+import { inputStyles} from '../Helpers'
 
 interface ProfileManagerProps {
   isModalOpen: boolean;
@@ -73,19 +74,6 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
       email: profile?.email ?? '',
     });
     setConfirmPassword('');
-  };
-
-  const inputStyles = {
-    mb: 2,
-    '& .MuiInputBase-input': { color: '#fff' },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': { borderColor: '#fff' },
-      '&:hover fieldset': { borderColor: '#fff' },
-      '&.Mui-focused fieldset': { borderColor: '#fff' },
-    },
-    '& .MuiInputLabel-root': { color: '#fff' },
-    '& .MuiFormHelperText-root': { color: '#fff' },
-    '& .MuiFormLabel-root-MuiInputLabel-root.Mui-disabled ': { color: '#fff'},
   };
 
   return (

@@ -1,0 +1,98 @@
+/* MovieComponent.module.css */
+.container {
+  background-color: #000;
+  color: #fff;
+  padding: 20px;
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  margin-top: 80px;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 40px 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 300px;
+}
+
+.searchInput::placeholder {
+  color: #fff;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.selector {
+  background-color: #000;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.tableContainer {
+  background-color: #000;
+  color: #fff;
+}
+
+.cell {
+  color: #fff;
+  padding: 10px;
+}
+
+.poster {
+  height: 50px;
+}
+
+.titleOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 5px;
+}
+
+.ratingOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 5px;
+}
+
+.editIcon {
+  color: #fff;
+}
+
+.deleteIcon {
+  color: red;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.genreSelectContainer {
+  height: 30px;
+  width: 160px;
+}

@@ -3,10 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
-import { useAuth } from '../../contexts/AuthContext'; // Asegúrate de que la ruta sea correcta
-import logoNetflix from '../../assets/logoNetflix.png';
-// import { useAuth } from './authContext';
-import NavBar from '../NavBar/NavBar';
+import { useAuth } from '../../contexts/AuthContext';
 
 const LoginForm: React.FC = () => {
   const { login , profile, token } = useAuth();
@@ -31,12 +28,6 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className={styles.login}>
-      {/* <header className={styles.header}>
-        <div className={styles.logo}>
-          <img src={logoNetflix} alt="Netflix Logo" />
-        </div>
-      </header> */}
-      {/* <NavBar /> */}
       <form className={styles.loginForm} onSubmit={handleLogin}>
         <h1>Iniciar Sesion</h1>
         <div className={styles.inputGroup}>

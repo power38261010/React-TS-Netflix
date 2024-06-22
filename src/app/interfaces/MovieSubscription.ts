@@ -1,5 +1,5 @@
 export interface MovieSubscriptionDto {
-  id: number;
+  id?: number;
   subscriptionId: number;
   movieId: number;
 }

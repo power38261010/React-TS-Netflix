@@ -1,0 +1,21 @@
+/* MovieItemModal.module.css */
+.errorPopup {
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.movieInfoModal {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.poster {
+  height: 50px;
+}
+
+.selector {
+  background-color: #000;
+  color: #fff;
+}

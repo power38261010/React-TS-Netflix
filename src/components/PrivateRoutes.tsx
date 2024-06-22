@@ -1,4 +1,3 @@
-// src/components/PrivateRoutes.tsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,8 +14,8 @@ const PrivateRoute: React.FC <PrivateRouteProps> = ({ roles }) => {
   }
 
   if (roles && roles.length > 0 && profile && !roles.includes(profile.role)) {
-    if ( ["admin","super_admin"].includes(profile.role)) return <Navigate to="/admin-dashboard" />;
-    return <Navigate to="/dashboard" />;
+    if ( ["admin","super_admin"].includes(profile.role)) return <Navigate to="/admin-content" />;
+    return <Navigate to="/movies-netflix" />;
   }
 
   return <Outlet />;

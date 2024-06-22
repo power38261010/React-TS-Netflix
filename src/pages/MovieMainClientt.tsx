@@ -9,7 +9,7 @@ import { RootState } from '../app/store';
 import { useSelector } from 'react-redux';
 
 
-const App: React.FC = () => {
+const MovieClientApp: React.FC = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [selectedPlayMovie, setSelectedPlayMovie] = useState<Movie | null>(null);
   const { movies } = useSelector((state: RootState) => state.movies);
@@ -43,4 +43,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default MovieClientApp;
