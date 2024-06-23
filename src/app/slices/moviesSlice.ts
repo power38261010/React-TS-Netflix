@@ -91,7 +91,6 @@ export const getBestMovies = createAsyncThunk('movies/getBestMovies',
       pageIndex,
       pageSize
     );
-    console.log("bestMoviesSlice ",bestMoviesSlice)
     let bms = [...bestMoviesSlice].sort((a, b) => (b?.rating ?? 0) - (a?.rating ?? 0));
     return bms?.slice(0, 3);
   }

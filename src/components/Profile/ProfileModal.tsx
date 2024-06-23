@@ -55,7 +55,6 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
       setProfileState((prev) => ({ ...prev, [name]: value }));
-    console.log("profileState ", profileState)
   };
 
   const handleConfirmPasswordChange = (e: any) => {

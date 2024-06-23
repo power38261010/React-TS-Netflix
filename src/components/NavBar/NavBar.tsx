@@ -70,7 +70,10 @@ const NavBar: React.FC = () => {
         {!!profile && ['admin', 'super_admin'].includes(profile.role) && (
           <>
             <Link to="/admin-content" className={styles.navLink}>
-              Administrar Peliculas y Usuarios
+              Administrar Peliculas
+            </Link>
+            <Link to="/users" className={styles.navLink}>
+              Administrar Usuarios
             </Link>
           </>
         )}

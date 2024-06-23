@@ -93,7 +93,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateProfile = async (id: number, userData: ProfileUpdate): Promise<boolean> =>{
     try {
       let response = await api.put(`/users/${id}`, userData);
-      console.log("response" ,response)
       let { token } = response.data;
       let user = response.data.profile
       if ( verifySign(token) ) {
@@ -110,7 +109,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const refreshProfile = async (): Promise<boolean> =>{
     try {
       let response = await api.get(`/users/${profile?.id}`);
-      console.log("refreshProfile response ", response);
       let user = response.data;
       let token = localStorage.getItem('token');
       if ( user !== null && !!token) {

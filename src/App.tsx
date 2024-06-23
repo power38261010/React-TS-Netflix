@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoutes';
 import LoginForm from './components/Login/LoginForm';
-import PageMainAdmin from './pages/PageMainAdmin';
+import PageMainAdmin from './pages/PageMovieAdmin';
 import MovieMainClientCompoment from './pages/MovieMainClientt';
 import PayComponent from './components/Pay/PayComponent';
 import PaymentSubscriptionComponent from './components/Pay/PaymentSubscriptionComponent';
 import PreDashboard from './components/PreDashboard';
-import UserComponent from './components/User/UserComponent';
+import PageUsersAdmin from './pages/PageUsersAdmin';
 import SubscriptionComponent from './components/Subscription/SubscriptionComponent';
 import Unauthorized from './components/Unauthorized';
 import Landing from './components/Landing/Landing';
@@ -35,7 +35,7 @@ const App: React.FC = () => {
             </Route>
             <Route element={<PrivateRoute roles={['admin','super_admin']} />}>
               <Route path="/admin-content" element={<PageMainAdmin />} />
-              {/* <Route path="/users" element={<UserComponent />} /> */}
+              <Route path="/users" element={<PageUsersAdmin />} />
             </Route>
             <Route element={<PrivateRoute roles={['client']} />}>
               <Route path="/movies-netflix" element={<MovieMainClientCompoment />} />

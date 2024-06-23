@@ -9,6 +9,11 @@ export const genres = [
   "Futurista", "Retro"
 ];
 
+export const roles = [
+  "admin", "client"
+];
+
+
 export const selectStyles = {
   mb: 2,
   '& .MuiInputBase-input': { color: '#fff' },

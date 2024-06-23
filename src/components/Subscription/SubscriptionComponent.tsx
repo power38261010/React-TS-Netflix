@@ -44,7 +44,7 @@ const SubscriptionComponent: React.FC = () => {
         <h2>Add New Subscription</h2>
         <input
           type="text"
-          placeholder="Type"
+          placeholder="Tipo"
           value={newSubscription.type}
           onChange={(e) => setNewSubscription({ ...newSubscription, type: e.target.value })}
         />

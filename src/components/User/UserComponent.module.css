@@ -1,0 +1,97 @@
+.container {
+  padding: 20px;
+  background-color: #141414; /* Fondo oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  margin-top: 80px;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 40px 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 300px;
+}
+
+.searchInput::placeholder {
+  color: #fff;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  cursor: pointer;
+  color: #fff;
+}
+.tableContainer {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+.confirmActionModal {
+  position: absolute;
+  width: 30vw;
+  height: 15vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #141414; /* Color oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirmActionButtons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modalChangeRole {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.selectRole {
+  color:#fff;
+  margin-bottom: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cell {
+  color: #fff;
+  padding: 10px;
+}
+
+.genreSelectContainer {
+  height: 30px;
+  width: 160px;
+}

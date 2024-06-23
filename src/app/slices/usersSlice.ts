@@ -4,7 +4,7 @@ import { User } from '../interfaces/User';
 
 // Acciones asíncronas para operaciones CRUD
 export const searchUsers = createAsyncThunk('users/searchUsers', async ({
-  username,
+  searchTerm,
   role,
   expirationDate,
   isPaid,
@@ -12,7 +12,7 @@ export const searchUsers = createAsyncThunk('users/searchUsers', async ({
   pageIndex,
   pageSize
 }: {
-  username?: string,
+  searchTerm?: string,
   role?: string,
   expirationDate?: Date,
   isPaid?: boolean,
@@ -21,7 +21,7 @@ export const searchUsers = createAsyncThunk('users/searchUsers', async ({
   pageSize?: number
 }) => {
   return userService.searchUsers(
-    username,
+    searchTerm,
     role,
     expirationDate,
     isPaid,
@@ -117,7 +117,10 @@ const usersSlice = createSlice({
       .addCase(softDeleteUser.pending, handlePending)
       .addCase(softDeleteUser.fulfilled, (state, action: PayloadAction<number>) => {
         state.loading = false;
-        state.users = state.users.filter(user => user.id !== action.payload);
+        const index = state.users.findIndex(user => user.id === action.payload);
+        if (index !== -1) {
+          state.users[index].role = '';
+        }
       })
       .addCase(softDeleteUser.rejected, handleRejected)
 

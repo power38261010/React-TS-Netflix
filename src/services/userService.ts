@@ -11,11 +11,11 @@ class UserService {
       // reload();
       return null;
     }
-  }
 
+  }
   async softDeleteUser(id: number): Promise<boolean> {
     try {
-      await api.delete(`/users/softdelete/${id}`);
+      await api.put(`users/softdelete/${id}`); // Asegúrate de que la ruta aquí coincida exactamente
       return true;
     } catch (error) {
       console.error(`Error soft deleting user with ID ${id}:`, error);
@@ -23,10 +23,11 @@ class UserService {
       return false;
     }
   }
+
 
   async upUser(id: number, role:string ): Promise<boolean> {
     try {
-      await api.put(`/users/softdelete/${id}/${role}`);
+      await api.put(`/users/up-user/${id}/${role}`);
       return true;
     } catch (error) {
       console.error(`Error soft deleting user with ID ${id}:`, error);
@@ -34,21 +35,20 @@ class UserService {
       return false;
     }
   }
-  // /up-user/{id}/{role}
 
   async searchUsers(
-    username?: string,
+    searchTerm?: string,
     role?: string,
     expirationDate?: Date,
     isPaid?: boolean,
     subscriptionType?: string,
     pageIndex: number = 1,
-    pageSize: number = 10
+    pageSize: number = 20
   ): Promise<any[]> {
     try {
       const response = await api.get('/users/search', {
         params: {
-          username,
+          searchTerm,
           role,
           expirationDate,
           isPaid,
@@ -57,6 +57,7 @@ class UserService {
           pageSize
         }
       });
+      console.log('response users', response)
       return response.data;
     } catch (error) {
       console.error('Error searching users:', error);

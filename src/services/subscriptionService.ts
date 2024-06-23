@@ -7,7 +7,6 @@ class SubscriptionService {
   async getAllSubscriptions(): Promise<Subscription[]> {
     try {
       const response = await api.get('/subscriptions');
-      console.log("response.data sub ", response.data)
       return response.data;
       } catch (error) {
         console.error('Error fetching subscriptions:', error);
@@ -15,18 +14,6 @@ class SubscriptionService {
       return [];
     }
   }
-
-  // Método para obtener una suscripción por ID
-  // async getSubscriptionById(id: number): Promise<Subscription | null> {
-  //   try {
-  //     const response = await api.get(`/subscriptions/${id}`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error(`Error fetching subscription with ID ${id}:`, error);
-  //     reload()
-  //     return null;
-  //   }
-  // }
 
   // Método para crear una nueva suscripción
   async createSubscription(subscription: Omit<Subscription, 'id'>): Promise<Subscription> {

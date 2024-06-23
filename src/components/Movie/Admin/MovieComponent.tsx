@@ -126,13 +126,19 @@ const MovieComponent: React.FC = () => {
     dispatch(searchMovies({ title: searchTerm, genre, subscriptionType, pageIndex, pageSize }));
   };
 
+  const handleKeyPress = (event: any) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(getAllSubscriptions());
   }, []);
 
   useEffect(() => {
     handleSearch();
-  }, [dispatch, searchTerm, genre, subscriptionType, pageIndex]);
+  }, [dispatch, genre, subscriptionType, pageIndex]);
 
   return (
     <div className={styles.container} >
@@ -146,6 +152,7 @@ const MovieComponent: React.FC = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
             sx={inputStyles}
           />
           <SearchIcon className={styles.searchIcon} onClick={handleSearch} />
@@ -207,7 +214,6 @@ const MovieComponent: React.FC = () => {
           </Button>
         </div>
       </div>
-      {/* <div style={{ height: '100vh' }}> */}
 
       <TableContainer component={Paper} sx={{ background: 'black', color: 'white' }} className={styles.tableContainer}>
         <Table>
@@ -254,7 +260,7 @@ const MovieComponent: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* </div> */}
+
       <Box className={styles.pagination}>
         <Button onClick={() => setPageIndex(pageIndex - 1)} disabled={pageIndex === 1}>{"<"}</Button>
         <Typography variant="body2">{pageIndex}</Typography>
