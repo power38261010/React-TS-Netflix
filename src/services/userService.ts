@@ -1,5 +1,4 @@
 import api from './api';
-import { reload } from './statusError';
 
 class UserService {
   async getUserById(id: number): Promise<any | null> {
@@ -8,18 +7,16 @@ class UserService {
       return response.data;
     } catch (error) {
       console.error(`Error fetching user with ID ${id}:`, error);
-      // reload();
       return null;
     }
 
   }
   async softDeleteUser(id: number): Promise<boolean> {
     try {
-      await api.put(`users/softdelete/${id}`); // Asegúrate de que la ruta aquí coincida exactamente
+      await api.put(`users/softdelete/${id}`);
       return true;
     } catch (error) {
       console.error(`Error soft deleting user with ID ${id}:`, error);
-      // reload();
       return false;
     }
   }
@@ -31,7 +28,6 @@ class UserService {
       return true;
     } catch (error) {
       console.error(`Error soft deleting user with ID ${id}:`, error);
-      // reload();
       return false;
     }
   }
@@ -61,13 +57,10 @@ class UserService {
       return response.data;
     } catch (error) {
       console.error('Error searching users:', error);
-      // reload();
       return [];
     }
   }
 }
 
-// Exporta la clase como instancia única (singleton)
 export const userService = new UserService();
 
-// Agrega aquí otros métodos de servicio relacionados con usuarios según sea necesario

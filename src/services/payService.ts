@@ -1,6 +1,5 @@
 import { Pay } from '../app/interfaces/Pay';
 import api from './api';
-import { reload } from './statusError';
 
 class PayService {
 
@@ -12,12 +11,11 @@ class PayService {
       return response.data;
     } catch (error) {
       console.error('Error fetching payments:', error);
-      reload ()
       return [];
     }
   };
 
-  async getAllWayPayments (): Promise<any[]>  {
+  async getAllWayPayments (): Promise<Pay[]>  {
     try {
       const response = await api.get('/payments/ars');
       console.log("pays ars  " ,response.data);
@@ -25,41 +23,40 @@ class PayService {
       return response.data;
     } catch (error) {
       console.error('Error fetching payments:', error);
-      reload ()
       return [];
     }
   };
 
-  async createPay  (pay: Omit<Pay, 'id'>): Promise<Pay>  {
+  async createPay (pay: Pay): Promise<Pay>  {
     try {
-      const response = await api.post<Pay>('/', pay);
+      const response = await api.post<Pay>('/payments', pay);
+      console.log('pay sudo create , ', response)
       return response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Error al crear el pago');
     }
   };
 
-  async updatePay  (id: number, pay: Omit<Pay, 'id'>): Promise<Pay>  {
+  async updatePay  (id: number, pay: Pay): Promise<Pay>  {
     try {
-      const response = await api.put<Pay>(`/${id}`, pay);
+      const response = await api.put<Pay>(`/payments/${id}`, pay);
+      console.log('pay sudo updatePay , ', response)
       return response.data;
     } catch (error: any) {
-      reload ()
       throw new Error(error.response?.data?.message || 'Error al actualizar el pago');
     }
   };
 
   async deletePay  (id: number): Promise<void>  {
     try {
-      await api.delete(`/${id}`);
+      let res = await api.delete(`/payments/${id}`);
+      console.log('pay sudo deletePay , ', res)
+
     } catch (error: any) {
-      reload ()
       throw new Error(error.response?.data?.message || 'Error al eliminar el pago');
     }
   };
 
 }
 
-// Exporta la clase como instancia única (singleton)
 export const payService = new PayService();
-// Agrega aquí otros métodos de servicio relacionados con pagos según sea necesario

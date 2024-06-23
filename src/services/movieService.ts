@@ -1,7 +1,5 @@
 import { Movie } from '../app/interfaces/Movie';
 import api from './api';
-import { reload } from './statusError';
-
 class MovieService {
 
 
@@ -11,7 +9,6 @@ class MovieService {
       return true;
     } catch (error) {
       console.error(`Error to rate movie with ID ${id}:`, error);
-      // reload ()
       return false;
     }
   }
@@ -22,7 +19,6 @@ class MovieService {
       return true;
     } catch (error) {
       console.error('Error creating movie:', error);
-      // reload ()
       return false;
     }
   }
@@ -33,7 +29,6 @@ class MovieService {
       return true;
     } catch (error) {
       console.error(`Error updating movie with ID ${id}:`, error);
-      // reload ()
       return false;
     }
   }
@@ -44,7 +39,6 @@ class MovieService {
       return true;
     } catch (error) {
       console.error(`Error deleting movie with ID ${id}:`, error);
-      // reload ()
       return false;
     }
   }
@@ -78,11 +72,9 @@ class MovieService {
       return response.data;
     } catch (error) {
       console.error('Error searching movies:', error);
-      // reload ()
       return [];
     }
   }
 }
 
-// Exporta la clase como instancia única (singleton)
 export const movieService = new MovieService();

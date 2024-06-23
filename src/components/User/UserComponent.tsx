@@ -27,7 +27,7 @@ import { Delete as DeleteIcon, Edit as EditIcon, Search as SearchIcon } from '@m
 import styles from './UserComponent.module.css';
 import { roles, inputStyles, selectStyles } from '../Helpers';
 import styled from '@mui/styled-engine';
-import { Profile, useAuth } from '../../contexts/AuthContext';
+import { Profile } from '../../contexts/AuthContext';
 import { Subscription } from '../../app/interfaces/Subscription';
 
 interface ProfileManagerProps {
@@ -153,12 +153,12 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
           <FormControl variant="outlined" size='small' fullWidth sx={selectStyles}>
             <InputLabel id="subscription-select-label">Abonados</InputLabel>
             <Select
-              value={subscriptionType}
+              value={isPaid}
               onChange={(e) => handlePaidSelect(e.target.value)}
               label="Abonados"
               className={styles.selector}
             >
-              <MenuItem key="Todos" selected={(subscriptionType === undefined)} value='undefined'><em>Todos</em></MenuItem>
+              <MenuItem key="Todos" selected={(isPaid === undefined)} value='undefined'><em>Todos</em></MenuItem>
                 <MenuItem key='abono' value='true'>Pagaron</MenuItem>
                 <MenuItem key='no-abono' value='false'>No Pagaron</MenuItem>
             </Select>
