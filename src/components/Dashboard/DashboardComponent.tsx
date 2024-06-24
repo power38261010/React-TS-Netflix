@@ -78,49 +78,47 @@ const DashboardComponent: React.FC = () => {
       <Typography variant="h4" sx={{ marginBottom: '20px' }}>Dashboard de Estadísticas</Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 10 }}>
-        <Box sx={{ flexBasis: '30%' }}>
-          <Typography align='center' variant="h5">Recaudación Venta Tipo Anual</Typography>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+          <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Venta Tipo Anual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${annualRevenue.toFixed(2)}</Typography>
         </Box>
-        <Box sx={{ flexBasis: '30%' }}>
-          <Typography align='center' variant="h5">Recaudación Venta Tipo Mensual</Typography>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+          <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Venta Tipo Mensual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${monthlyRevenue.toFixed(2)}</Typography>
         </Box>
-        <Box sx={{ flexBasis: '30%' }}>
-          <Typography align='center' variant="h5">Recaudación Total Anual</Typography>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+          <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Total Anual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${totalYearlyRevenue.toFixed(2)}</Typography>
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', marginTop: '20px' }}>
-        <Box sx={{ flexBasis: '30%', mt: 10 }}>
-          <Typography variant="h5" sx={{ marginTop: '10px' }}>Pagos de Subscripciones</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', marginTop: '20px' }}>
+        <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 , mr:40, }}>
+          <Typography variant="h5" sx={{ marginBottom: '10px' }}>Pagos de Subscripciones</Typography>
           <VictoryPie
             data={[
               { x: 'Anual', y: annualCount },
               { x: 'Mensual', y: monthlyCount }
             ]}
             colorScale={['#FF5733', '#3333FF']}
-            labelRadius={15}
-            style={{ labels: { fill: 'white', fontSize: 7, fontWeight: 'bold' } }}
-            width={200}
-            height={200}
+            labelRadius={30}
+            style={{ labels: { fill: 'white', fontSize: 14, fontWeight: 'bold' } }}
+            width={300} // Ajustar el tamaño del VictoryPie
           />
         </Box>
-        <Box sx={{ flexBasis: '30%', mt: 10 }}>
-          <Typography variant="h5" sx={{ margintop: '10px' }}>Usuarios con Subscripciones</Typography>
+        <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 }}>
+          <Typography variant="h5" sx={{ marginBottom: '10px' }}>Usuarios con Subscripciones</Typography>
           <VictoryBar
             data={[
               { x: 'Started', y: startedSubscriptions.length },
               { x: 'Premium', y: premiumSubscriptions.length }
             ]}
-            style={{ data: { fill: '#33FFEC' }, labels: { fill: 'white' } }}
-            barWidth={30}
+            style={{ data: { fill: '#33FFEC' }, labels: { fill: 'white', fontSize: 12 } }} // Ajuste del tamaño de la letra
+            barWidth={30} // Reducción del ancho de la barra para mejorar la separación entre las barras
             cornerRadius={4}
-            width={200} // Ajustar el tamaño del VictoryBar
-            height={100} // Ajustar el tamaño del VictoryBar
+            width={300} // Ajustar el tamaño del VictoryBar
             // Agregar ejes cartesianos
-            domain={{ y: [0, Math.max(startedSubscriptions.length, premiumSubscriptions.length) + 3] }}
+            domain={{ y: [0, Math.max(startedSubscriptions.length, premiumSubscriptions.length) + 5] }}
             labels={({ datum }) => `${datum.x}: ${datum.y}`}
           />
         </Box>
