@@ -94,7 +94,7 @@ const DashboardComponent: React.FC = () => {
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', marginTop: '20px' }}>
         <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 , mr:40, }}>
-          <Typography variant="h5" sx={{ marginBottom: '10px' }}>Pagos de Subscripciones</Typography>
+          <Typography variant="h5" align='center' sx={{ marginBottom: '10px' }}>Pagos de Subscripciones</Typography>
           <VictoryPie
             data={[
               { x: 'Anual', y: annualCount },
@@ -107,7 +107,7 @@ const DashboardComponent: React.FC = () => {
           />
         </Box>
         <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 }}>
-          <Typography variant="h5" sx={{ marginBottom: '10px' }}>Usuarios con Subscripciones</Typography>
+          <Typography variant="h5" align='center' sx={{ marginBottom: '10px' }}>Usuarios con Subscripciones</Typography>
           <VictoryBar
             data={[
               { x: 'Started', y: startedSubscriptions.length },

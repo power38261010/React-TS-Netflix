@@ -25,7 +25,7 @@ const UserAdminApp: React.FC = () => {
             <DashboardComponent />
           </Box>
           <Box sx={{ bgcolor: '#141414', padding: '1px' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb:5}}>
               <Box sx={{ flex: '0 0 61%', marginLeft: '2%', marginRight: '5%' }}>
                 <PayComponent />
               </Box>
