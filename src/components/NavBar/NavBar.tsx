@@ -64,37 +64,49 @@ const NavBar: React.FC = () => {
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.logo}>
-        <Link to="/" >
+        <Link to="/">
           <img src={logoNetflix} alt="Netflix Logo" />
         </Link>
       </div>
       <div className={styles.links}>
-        {!!profile &&profile.role === 'super_admin' && (
+        {!!profile && profile.role === 'super_admin' && (
           <>
-            <Link to="/super-admin-dashboard" className={styles.navLink} style={{marginRight:'4px'}} >
+            <Link
+              to="/super-admin-dashboard"
+              className={`${styles.navLink} ${location.pathname === '/super-admin-dashboard' ? styles.activeLink : ''}`}
+            >
               Dashboard
             </Link>
           </>
         )}
         {!!profile && ['admin', 'super_admin'].includes(profile.role) && (
           <>
-            <Link to="/admin-content" className={styles.navLink} style={{marginRight:'4px'}} >
-              Administrar Peliculas
+            <Link
+              to="/admin-content"
+              className={`${styles.navLink} ${location.pathname === '/admin-content' ? styles.activeLink : ''}`}
+            >
+              Administrar Películas
             </Link>
-            <Link to="/users" className={styles.navLink} style={{marginRight:'4px'}} >
+            <Link
+              to="/users"
+              className={`${styles.navLink} ${location.pathname === '/users' ? styles.activeLink : ''}`}
+            >
               Administrar Usuarios
             </Link>
           </>
         )}
         {profile?.role === 'client' && (
           <>
-            <Link to="/movies-netflix" className={styles.navLink} style={{marginRight:'4px'}} >
+            <Link
+              to="/movies-netflix"
+              className={`${styles.navLink} ${location.pathname === '/movies-netflix' ? styles.activeLink : ''}`}
+            >
               Películas
             </Link>
           </>
         )}
       </div>
-      {profile?.role === 'client' && (
+      {profile?.role === 'client' && location.pathname === '/movies-netflix' && (
         <div className={styles.searchContainer}>
           <div className={styles.search}>
             <input
@@ -117,7 +129,17 @@ const NavBar: React.FC = () => {
             onMouseLeave={() => toggleDropdown(false)}
           >
             <button className={styles.navButton}>
-              <AccountCircleIcon fontSize="large" style={{ color: '#fff' }} />
+              <AccountCircleIcon
+                fontSize="large"
+                style={{
+                  color:
+                    profile.role === 'admin' || profile.role === 'super_admin'
+                      ? 'red'
+                      : profile.role === 'client' && profile?.subscription?.id === 2
+                      ? 'yellow'
+                      : 'white',
+                }}
+              />
               <span className={styles.navButtonText}>{profile?.username}</span>
             </button>
             {dropdownOpen && (
@@ -140,7 +162,7 @@ const NavBar: React.FC = () => {
           )
         )}
       </div>
-      <ProfileManager isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  />
+      <ProfileManager isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </header>
   );
 };

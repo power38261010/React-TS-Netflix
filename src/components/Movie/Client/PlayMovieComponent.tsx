@@ -22,8 +22,11 @@ const PlayMovieComponent: React.FC<PlayMovieComponentProps> = ({ movie, onCloseP
 
   const onPlayerReady = (event: any) => {
     if (event?.target) {
-      event?.target?.playVideo();
-      playerRef.current = event?.target;
+      const player = event.target;
+      player.playVideo();
+      playerRef.current = player;
+    } else {
+      console.error('El objeto de video no está inicializado correctamente.');
     }
   };
 

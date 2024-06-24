@@ -77,10 +77,14 @@ const TrailerBestMoviesComponent: React.FC<TrailerBestMoviesProps> = ({ onOpenPl
 
   const onPlayerReady = (event: any) => {
     if (event?.target) {
-      event?.target?.playVideo();
-      playerRef.current = event?.target;
+      const player = event.target;
+      player.playVideo();
+      playerRef.current = player;
+    } else {
+      console.error('El objeto de video no está inicializado correctamente.');
     }
   };
+  
 
   const onPlayerStateChange = (event: { data: number }) => {
     if (event.data === 0) {
