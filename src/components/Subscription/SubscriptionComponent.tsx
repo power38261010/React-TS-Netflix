@@ -42,7 +42,7 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #141414; /* Color oscuro estilo Netflix */
+  background-color: #141414;
   color: white; /* Texto blanco */
   padding: 16px;
   display: flex;
@@ -122,7 +122,7 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
       </TableContainer>
 
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <ConfirmDeleteModalPaper>
+        <Box className={styles.modal}>
             <Typography variant="h6" className={styles.modalTitle}>
               {modalType === 'edit' ? 'Edición de Subscripción' : 'Creación de Subscripción'}
             </Typography>
@@ -144,7 +144,7 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
                 Cancelar
               </Button>
             </Box>
-          </ConfirmDeleteModalPaper>
+          </Box>
       </Modal>
     </Box>
   );

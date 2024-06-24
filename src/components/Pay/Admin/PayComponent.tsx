@@ -29,11 +29,6 @@ import styled from '@mui/styled-engine';
 import { inputStyles, selectStyles } from '../../Helpers';
 import { getAllSubscriptions } from '../../../app/slices';
 
-// interface PayManagerProps {
-//   pays: Pay[] | [];
-//   subscriptions: Subscription[];
-// }
-
 const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptions } **/) => {
   const dispatch = useDispatch<AppDispatch>();
   const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
@@ -47,27 +42,10 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
     subscriptionId: 1
   });
 
-
   useEffect(() => {
     dispatch(getAllPayments());
     dispatch(getAllSubscriptions());
   }, [dispatch]);
-
-  const ConfirmDeleteModalPaper = styled(Paper)`
-    position: absolute;
-    width: 25vw;
-    height: 35vh;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #141414;
-    color: white;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `;
 
   const handleOpenModal = (pay?: Pay) => {
     if (pay) {
@@ -167,7 +145,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
       </TableContainer>
 
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <Paper className={styles.modal}>
+        <Box className={styles.modal}>
           <Typography variant="h6" sx={{ mb: 4 }} className={styles.modalTitle}>
             {modalType === 'edit' ? 'Edición de Pago' : 'Creación de Pago'}
           </Typography>
@@ -217,7 +195,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
               Cancelar
             </Button>
           </Box>
-        </Paper>
+        </Box>
       </Modal>
     </Box>
   );
