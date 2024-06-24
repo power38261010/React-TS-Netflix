@@ -219,29 +219,29 @@ const MovieComponent: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: 'white' }}>Imagen</TableCell>
-              <TableCell sx={{ color: 'white' }}>Titulo</TableCell>
-              <TableCell sx={{ color: 'white' }}>Rating</TableCell>
-              <TableCell sx={{ color: 'white' }}>Genero</TableCell>
-              <TableCell sx={{ color: 'white' }}>Descripcion</TableCell>
-              <TableCell sx={{ color: 'white' }}>Subscripciones</TableCell>
-              <TableCell sx={{ color: 'white' }}>Fecha de Lanzamiento</TableCell>
-              <TableCell sx={{ color: 'white' }}>Acciones</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Imagen</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Titulo</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Rating</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Genero</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Descripcion</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Subscripciones</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Fecha de Lanzamiento</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {movies.map((movie) => (
               <TableRow key={movie.id}>
-                <TableCell className={styles.cell}>
+                <TableCell  align="center"  className={styles.cell}>
                   <img src={movie.posterUrl} alt={"Sin Imagen"} className={styles.poster} />
                 </TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{movie.title}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{roundToTwoDecimals(movie.rating)}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{movie.genre}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.shortenDescription}>{movie.description}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{getTypesSubscription(movie?.movieSubscriptions || [])}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{new Date(movie?.releaseDate || '').toLocaleDateString()}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>{movie.title}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>{roundToTwoDecimals(movie.rating)}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>{movie.genre}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.shortenDescription}>{movie.description}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>{getTypesSubscription(movie?.movieSubscriptions || [])}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>{new Date(movie?.releaseDate || '').toLocaleDateString()}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell}>
                   <IconButton
                     onClick={() => {
                       setAnyMovie(movie);

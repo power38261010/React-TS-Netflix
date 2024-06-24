@@ -186,25 +186,25 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: 'white' }} >Rol</TableCell>
-              <TableCell sx={{ color: 'white' }} >Usuario</TableCell>
-              <TableCell sx={{ color: 'white' }} >Email</TableCell>
-              <TableCell sx={{ color: 'white' }} >Abono</TableCell>
-              <TableCell sx={{ color: 'white' }} >Subscripción</TableCell>
-              <TableCell sx={{ color: 'white' }} >Expiración de Subscripción</TableCell>
-              <TableCell sx={{ color: 'white' }} >Acciones</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Rol</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Usuario</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Email</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Abono</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Subscripción</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Expiración de Subscripción</TableCell>
+              <TableCell align="center"  sx={{ color: 'white' }} >Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{ (user.role === '' || user.role === null)  ?  'Eliminado' : user.role }</TableCell>
-                <TableCell sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.username ?? 'Sin username'}</TableCell>
-                <TableCell sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.email ?? 'Sin email'}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell} >{user.isPaid ? 'Si' : 'No'}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell} >{subscriptions.find((s) => s.id === user.subscriptionId)?.type ?? 'Sin Subscripcion'}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell} >{  user?.expirationDate?.toString().split('T')[0].split('-').reverse().join('/')  ?? 'Sin Fecha'}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell} >
+                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{ (user.role === '' || user.role === null)  ?  'Eliminado' : user.role }</TableCell>
+                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.username ?? 'Sin username'}</TableCell>
+                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.email ?? 'Sin email'}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{user.isPaid ? 'Si' : 'No'}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{subscriptions.find((s) => s.id === user.subscriptionId)?.type ?? 'Sin Subscripcion'}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{  user?.expirationDate?.toString().split('T')[0].split('-').reverse().join('/')  ?? 'Sin Fecha'}</TableCell>
+                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >
                   { profile?.role === 'super_admin' && user?.role !== 'super_admin' && (
                     <IconButton  onClick={() => handleUpUser(user.id)}>
                       <EditIcon style={{ color: 'white' }} />
