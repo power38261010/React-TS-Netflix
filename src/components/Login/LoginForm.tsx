@@ -1,19 +1,19 @@
-// src/components/LoginForm/LoginForm.tsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 
 const LoginForm: React.FC = () => {
-  const { login , profile, token } = useAuth();
+  const { login, profile, token } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  if (profile !== null && token !== null )
-  {
+
+  if (profile !== null && token !== null) {
     navigate('/pre-dashboard');
   }
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
@@ -23,6 +23,7 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
+      setErrorMessage('El nombre de usuario o contraseña no coinciden con ningún usuario, vuelve a ingresarlos correctamente!'); // Actualizar el mensaje de error
     }
   };
 
@@ -30,6 +31,7 @@ const LoginForm: React.FC = () => {
     <div className={styles.login}>
       <form className={styles.loginForm} onSubmit={handleLogin}>
         <h1>Iniciar Sesion</h1>
+        {errorMessage && <p className={styles.error}>{errorMessage}</p>}
         <div className={styles.inputGroup}>
           <input
             type="text"
@@ -52,9 +54,10 @@ const LoginForm: React.FC = () => {
           Iniciar Sesion
         </button>
         <div className={styles.extraLinks}>
-          <a href="#">Necesitas Ayuda?</a>
+ 
+          <a href="" >Necesitas Ayuda?</a>
           <br />
-          <a href="#">Eres Nuevo en Neftlix? Registrate Ahora</a>
+          <a href="" onClick={ ()=>   navigate('/register') }>Eres Nuevo en Neftlix? Registrate Ahora</a>
         </div>
       </form>
       <footer className={styles.footer}>

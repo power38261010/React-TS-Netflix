@@ -8,12 +8,12 @@ export const getAllPayments = createAsyncThunk('pays/getAllPayments', async () =
 });
 
 // Define una acción asíncrona para crear un pago
-export const createPay = createAsyncThunk('pays/createPay', async (pay: Omit<Pay, 'id'>) => {
+export const createPay = createAsyncThunk('pays/createPay', async (pay: Pay) => {
   return payService.createPay(pay);
 });
 
 // Define una acción asíncrona para actualizar un pago
-export const updatePay = createAsyncThunk('pays/updatePay', async ({ id, pay }: { id: number, pay: Omit<Pay, 'id'> }) => {
+export const updatePay = createAsyncThunk('pays/updatePay', async ({ id, pay }: { id: number, pay: Pay }) => {
   return payService.updatePay(id, pay);
 });
 

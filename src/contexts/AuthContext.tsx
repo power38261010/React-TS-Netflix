@@ -23,12 +23,13 @@ interface AuthContextType {
   profile: Profile | null;
   token: string | null;
   login: (username: string, password: string) => Promise<boolean>;
-  register: (username: string, password: string) => Promise<boolean>;
+  register: (username: string,email: string, password: string, subscriptionId: number) => Promise<boolean>;
   updateProfile : (id: number, userData: ProfileUpdate) => Promise<boolean>;
   refreshProfile: () => Promise<boolean>;
   logout: () => void;
   isAuthenticated: () => boolean;
   verifyTokenInServer: () => Promise<boolean>;
+  errorRegisterMsg: any | null;
 }
 
 interface DecodedToken {
@@ -46,6 +47,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token') || null);
+  const [errorRegisterMsg, setErrorRegisterMsg] = useState<any | null>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -74,18 +76,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (username: string, password: string): Promise<boolean> => {
+  const register = async (username: string,email: string, password: string, subscriptionId: number): Promise<boolean> => {
     try {
-      const response = await api.post('/auth/register', { Username: username, PasswordHash: password });
+      const response = await api.post('/auth/register', { Username: username, Email:email, PasswordHash: password , SubscriptionId: subscriptionId});
       let { token } = response.data;
       let user = response.data.profile
       if ( verifySign(token) ) {
+        setErrorRegisterMsg(null)
         setCredentials (token,user)
         return true;
       }
       return false;
     } catch (error) {
       console.error('Error al registrar usuario:', error);
+      setErrorRegisterMsg(error)
       return false;
     }
   };
@@ -170,7 +174,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ profile, token, login, register, updateProfile, logout, isAuthenticated, verifyTokenInServer, refreshProfile }}>
+    <AuthContext.Provider value={{ profile, token, login, register, updateProfile, logout, isAuthenticated, verifyTokenInServer, refreshProfile, errorRegisterMsg }}>
       {children}
     </AuthContext.Provider>
   );

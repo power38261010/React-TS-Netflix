@@ -85,3 +85,10 @@
   text-align: center;
   background-color: rgba(0, 0, 0, 0.7);
 }
+
+
+.error {
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+}

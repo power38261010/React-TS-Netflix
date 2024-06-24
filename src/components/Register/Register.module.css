@@ -1,0 +1,11 @@
+.error {
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.legenda {
+  margin-top: 20px;
+  color: gray;
+  text-align: center;
+}

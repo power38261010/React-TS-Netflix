@@ -1,0 +1,89 @@
+.container {
+  padding: 20px;
+  background-color: #141414; /* Fondo oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-top: 80px;
+}
+
+.newButton {
+  margin-left: 50px;
+  padding: 10px 20px;
+  background-color: #e50914; /* Color rojo estilo Netflix */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tableContainer {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.cell {
+  color: #fff;
+  padding: 10px;
+}
+
+.modal {
+  position: absolute;
+  width: 30vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #141414; /* Color oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalTitle {
+  margin-bottom: 20px;
+}
+
+.modalInput {
+  margin-bottom: 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.modalSelect {
+  margin-bottom: 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.modalButtons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.genreSelectContainer {
+  height: 30px;
+  width: 160px;
+}

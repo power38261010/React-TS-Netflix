@@ -8,10 +8,10 @@ import {
   getPaymentMethods,
 } from '@mercadopago/sdk-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../app/store';
-import { createPayment, getAllWayPayments } from '../../app/slices/paymentSubscriptionSlice';
-import { PaymentRequest } from '../../app/interfaces/PaymentSubscription';
-import { CardPay } from '../../app/interfaces/CardPay';
+import { RootState, AppDispatch } from '../../../app/store';
+import { createPayment, getAllWayPayments } from '../../../app/slices/paymentSubscriptionSlice';
+import { PaymentRequest } from '../../../app/interfaces/PaymentSubscription';
+import { CardPay } from '../../../app/interfaces/CardPay';
 import {
   Box,
   Button,
@@ -31,9 +31,9 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import { getAllSubscriptions } from '../../app/slices';
+import { getAllSubscriptions } from '../../../app/slices';
 import { CardNumberParams } from '@mercadopago/sdk-react/secureFields/cardNumber/types';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const PaymentComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

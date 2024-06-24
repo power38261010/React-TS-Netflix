@@ -48,7 +48,7 @@ const NavBar: React.FC = () => {
 
   const handleOpenProfileManager = () => {
     setIsModalOpen(true);
-    setDropdownOpen(false); // Cierra el dropdown cuando se abre el modal
+    setDropdownOpen(false);
   };
 
   const handleSearch = () => {
@@ -64,32 +64,31 @@ const NavBar: React.FC = () => {
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.logo}>
-        <img src={logoNetflix} alt="Netflix Logo" />
+        <Link to="/" >
+          <img src={logoNetflix} alt="Netflix Logo" />
+        </Link>
       </div>
       <div className={styles.links}>
-        {!!profile && ['admin', 'super_admin'].includes(profile.role) && (
+        {!!profile &&profile.role === 'super_admin' && (
           <>
-            <Link to="/admin-content" className={styles.navLink}>
-              Administrar Peliculas
-            </Link>
-            <Link to="/users" className={styles.navLink}>
-              Administrar Usuarios
+            <Link to="/super-admin-dashboard" className={styles.navLink} style={{marginRight:'4px'}} >
+              Dashboard
             </Link>
           </>
         )}
-        {!!profile && ['super_admin'].includes(profile.role) && (
+        {!!profile && ['admin', 'super_admin'].includes(profile.role) && (
           <>
-            <Link to="/pays" className={styles.navLink}>
-              Pagos
+            <Link to="/admin-content" className={styles.navLink} style={{marginRight:'4px'}} >
+              Administrar Peliculas
             </Link>
-            <Link to="/subscriptions" className={styles.navLink}>
-              Subscripciones
+            <Link to="/users" className={styles.navLink} style={{marginRight:'4px'}} >
+              Administrar Usuarios
             </Link>
           </>
         )}
         {profile?.role === 'client' && (
           <>
-            <Link to="/movies-netflix" className={styles.navLink}>
+            <Link to="/movies-netflix" className={styles.navLink} style={{marginRight:'4px'}} >
               Películas
             </Link>
           </>
