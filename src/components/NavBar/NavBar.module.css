@@ -39,7 +39,42 @@
   color: #fff;
   text-decoration: none;
   font-size: 16px;
+  position: relative;
+  display: inline-block;
 }
+
+.navLink::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: width 0.3s;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.activeLink {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.activeLink::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+}
+
 
 .actions {
   display: flex;

@@ -74,6 +74,7 @@ const NavBar: React.FC = () => {
             <Link
               to="/super-admin-dashboard"
               className={`${styles.navLink} ${location.pathname === '/super-admin-dashboard' ? styles.activeLink : ''}`}
+              style={{ marginLeft: '70px'}}
             >
               Dashboard
             </Link>
@@ -84,12 +85,14 @@ const NavBar: React.FC = () => {
             <Link
               to="/admin-content"
               className={`${styles.navLink} ${location.pathname === '/admin-content' ? styles.activeLink : ''}`}
+              style={{ marginLeft: '70px'}}
             >
               Administrar Películas
             </Link>
             <Link
               to="/users"
               className={`${styles.navLink} ${location.pathname === '/users' ? styles.activeLink : ''}`}
+              style={{ marginLeft: '70px'}}
             >
               Administrar Usuarios
             </Link>
@@ -100,6 +103,7 @@ const NavBar: React.FC = () => {
             <Link
               to="/movies-netflix"
               className={`${styles.navLink} ${location.pathname === '/movies-netflix' ? styles.activeLink : ''}`}
+              style={{ marginLeft: '70px'}}
             >
               Películas
             </Link>
