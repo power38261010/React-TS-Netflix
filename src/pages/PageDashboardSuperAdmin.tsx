@@ -2,41 +2,40 @@ import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import SubscriptionComponent from '../components/Subscription/SubscriptionComponent';
 import PayComponent from '../components/Pay/Admin/PayComponent';
-import { useSelector } from 'react-redux';
-import { RootState } from '../app/store';
-import { getAllPaymentSubscriptions, getAllPayments, getAllSubscriptions } from '../app/slices';
 import { useDispatch } from 'react-redux';
+import { getAllPaymentSubscriptions, getAllPayments, getAllSubscriptions } from '../app/slices';
 import { AppDispatch } from '../app/store';
+import DashboardComponent from '../components/Dashboard/DashboardComponent';
+import { getAll } from '../app/slices/usersSlice';
 
 const UserAdminApp: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
-  const { pays } = useSelector((state: RootState) => state.pays);
-  const { paysub } = useSelector((state: RootState) => state.payment);
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
+    dispatch(getAll());
     dispatch(getAllPayments());
     dispatch(getAllPaymentSubscriptions());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
-        {/* <DashboardContent subscriptions = {subscriptions} pays = {pays}  users = {users} paysub = {paysub}/> */}
-      <Box sx={{
-        display: 'flex',
-        bgcolor: '#141414',
-        height: '100vh',
-        justifyContent: 'space-between',
-        alignItems: 'stretch'
-      }}>
-        <Box sx={{ flex: '0 0 61%',marginLeft: '2%', marginRight: '5%' }}>
-          <PayComponent />
+        <Box sx={{ bgcolor: '#141414', height: '100vh' }}>
+          <Box sx={{ bgcolor: '#141414', padding: '20px', overflow: 'auto'}}>
+            <DashboardComponent />
+          </Box>
+          <Box sx={{ bgcolor: '#141414', padding: '5px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+              <Box sx={{ flex: '0 0 61%', marginLeft: '2%', marginRight: '5%' }}>
+                <PayComponent />
+              </Box>
+              <Box sx={{ flex: '0 0 30%', marginRight: '2%' }}>
+                <SubscriptionComponent />
+              </Box>
+            </Box>
+          </Box>
         </Box>
-        <Box sx={{ flex: '0 0 30%',marginRight: '2%' }}>
-          <SubscriptionComponent />
-        </Box>
-      </Box>
+
     </>
   );
 };

@@ -1,6 +1,8 @@
+import { User } from '../app/interfaces/User';
 import api from './api';
 
 class UserService {
+
   async getUserById(id: number): Promise<any | null> {
     try {
       const response = await api.get(`/users/${id}`);
@@ -11,6 +13,20 @@ class UserService {
     }
 
   }
+
+  async getAll(): Promise<User[] | []> {
+    try {
+      const response = await api.get(`/users`);
+      console.log(' response get all users ', response)
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching user getall`, error);
+      return [];
+    }
+
+  }
+
+
   async softDeleteUser(id: number): Promise<boolean> {
     try {
       await api.put(`users/softdelete/${id}`);

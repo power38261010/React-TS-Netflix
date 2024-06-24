@@ -1,0 +1,29 @@
+.container {
+  padding: 20px;
+  background-color: #141414; /* Fondo oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.charts {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.chartPaper {
+  background-color: #1f1f1f;
+  color: white;
+  padding: 20px;
+  width: 45%;
+}
+
+.chartTitle {
+  margin-bottom: 10px;
+}

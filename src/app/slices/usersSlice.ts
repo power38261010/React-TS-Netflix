@@ -30,6 +30,11 @@ export const searchUsers = createAsyncThunk('users/searchUsers', async ({
     pageSize
   );
 });
+// 
+
+export const getAll = createAsyncThunk('users/getAll', async () => {
+  return userService.getAll();
+});
 
 export const getUserById = createAsyncThunk('users/getUserById', async (id: number) => {
   return userService.getUserById(id);
@@ -52,6 +57,7 @@ export const upUser = createAsyncThunk('users/upUser', async (userRole: UpdateRo
 
 interface UsersState {
   users: User[];
+  allUsers: User[] | [];
   loading: boolean;
   error: string | null;
 }
@@ -63,6 +69,7 @@ interface UpdateRole {
 
 const initialState: UsersState = {
   users: [],
+  allUsers: [],
   loading: false,
   error: null,
 };
@@ -101,6 +108,13 @@ const usersSlice = createSlice({
         state.users = action.payload;
       })
       .addCase(searchUsers.rejected, handleRejected)
+
+      .addCase(getAll.pending, handlePending)
+      .addCase(getAll.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.loading = false;
+        state.allUsers = action.payload;
+      })
+      .addCase(getAll.rejected, handleRejected)
 
       .addCase(getUserById.pending, handlePending)
       .addCase(getUserById.fulfilled, (state, action: PayloadAction<User>) => {
