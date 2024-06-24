@@ -8,13 +8,11 @@ import { getAllPaymentSubscriptions, getAllPayments, getAllSubscriptions } from 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/store';
 
-
 const UserAdminApp: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
   const { pays } = useSelector((state: RootState) => state.pays);
   const { paysub } = useSelector((state: RootState) => state.payment);
-
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
@@ -24,13 +22,21 @@ const UserAdminApp: React.FC = () => {
 
   return (
     <>
-        <Box sx={{ bgcolor: '#141414', height: '100vh' }}>
-          {/* <DashboardContent subscriptions = {subscriptions} pays = {pays}  users = {users} paysub = {paysub}/> */}
-          <SubscriptionComponent /*subscriptions = {subscriptions} **/ />
-          <PayComponent /* subscriptions = {subscriptions} pays = {pays} **/ />
-
-          
+        {/* <DashboardContent subscriptions = {subscriptions} pays = {pays}  users = {users} paysub = {paysub}/> */}
+      <Box sx={{
+        display: 'flex',
+        bgcolor: '#141414',
+        height: '100vh',
+        justifyContent: 'space-between',
+        alignItems: 'stretch'
+      }}>
+        <Box sx={{ flex: '0 0 61%',marginLeft: '2%', marginRight: '5%' }}>
+          <PayComponent />
         </Box>
+        <Box sx={{ flex: '0 0 30%',marginRight: '2%' }}>
+          <SubscriptionComponent />
+        </Box>
+      </Box>
     </>
   );
 };

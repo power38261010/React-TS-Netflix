@@ -29,10 +29,10 @@ import styled from '@mui/styled-engine';
 import { inputStyles, selectStyles } from '../../Helpers';
 import { getAllSubscriptions } from '../../../app/slices';
 
-interface PayManagerProps {
-  pays: Pay[] | [];
-  subscriptions: Subscription[];
-}
+// interface PayManagerProps {
+//   pays: Pay[] | [];
+//   subscriptions: Subscription[];
+// }
 
 const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptions } **/) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -141,21 +141,21 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: 'white' }}>Moneda</TableCell>
-              <TableCell sx={{ color: 'white' }}>Valor Mensual</TableCell>
-              <TableCell sx={{ color: 'white' }}>Subscripción</TableCell>
-              <TableCell sx={{ color: 'white' }}>Acciones</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Moneda</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Valor Mensual</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Subscripción</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {pays.map((pay) => (
               <TableRow key={pay.id}>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{pay.currency}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{pay.monthlyPayment}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>
-                  {subscriptions.find((sub) => sub.id === pay.subscriptionId)?.type ?? 'Sin Subscripcion'}
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.currency}</TableCell>
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.monthlyPayment}</TableCell>
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
+                  {subscriptions.find((sub) => sub.id === pay.subscriptionId)?.type ?? 'Sin Subscripción'}
                 </TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
                   <IconButton onClick={() => handleOpenModal(pay)}>
                     <EditIcon style={{ color: 'white' }} />
                   </IconButton>
@@ -167,7 +167,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
       </TableContainer>
 
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <ConfirmDeleteModalPaper>
+        <Paper className={styles.modal}>
           <Typography variant="h6" sx={{ mb: 4 }} className={styles.modalTitle}>
             {modalType === 'edit' ? 'Edición de Pago' : 'Creación de Pago'}
           </Typography>
@@ -192,12 +192,12 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
               sx={inputStyles}
             />
           </Box>
-          <Box sx={{ mb: 1, width: 120 }}>
+          <Box sx={{ mb: 1 }}>
             <FormControl variant="outlined" size="small" fullWidth sx={selectStyles}>
               <InputLabel id="subscription-select-label">Subscripción</InputLabel>
               <Select
                 value={currentPay.subscriptionId || 1}
-                onChange={(e)=> handleSubscriptionChange(e)}
+                onChange={handleSubscriptionChange}
                 name='subscriptionId'
                 label="Subscripción"
               >
@@ -217,7 +217,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
               Cancelar
             </Button>
           </Box>
-        </ConfirmDeleteModalPaper>
+        </Paper>
       </Modal>
     </Box>
   );

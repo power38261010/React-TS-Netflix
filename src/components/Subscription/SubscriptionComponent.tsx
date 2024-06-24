@@ -23,9 +23,9 @@ import { Subscription } from '../../app/interfaces/Subscription';
 import styled from '@mui/styled-engine';
 import { inputStyles } from '../Helpers';
 
-interface SubscriptionManagerProps {
-  subscriptions: Subscription[] | [];
-}
+// interface SubscriptionManagerProps {
+//   subscriptions: Subscription[] | [];
+// }
 
 const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {subscriptions} **/ ) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -90,8 +90,11 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
           <Button
             variant="contained"
             color="primary"
-            size='medium'
-            onClick={() => handleOpenModal()}>Nueva Subscripción</Button>
+            size="medium"
+            onClick={() => handleOpenModal()}
+          >
+            Nueva Subscripción
+          </Button>
         </div>
       </div>
 
@@ -99,15 +102,15 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: 'white' }}>Tipo</TableCell>
-              <TableCell sx={{ color: 'white' }}>Acciones</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Tipo</TableCell>
+              <TableCell align="center" sx={{ color: 'white' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {subscriptions.map((subscription) => (
               <TableRow key={subscription.id}>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>{subscription.type}</TableCell>
-                <TableCell sx={{ color: 'white' }} className={styles.cell}>
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{subscription.type}</TableCell>
+                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
                   <IconButton onClick={() => handleOpenModal(subscription)}>
                     <EditIcon style={{ color: 'white' }} />
                   </IconButton>
@@ -120,32 +123,32 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
 
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <ConfirmDeleteModalPaper>
-          <Typography variant="h6" className={styles.modalTitle}>
-            {modalType === 'edit' ? 'Edición de Subscripción' : 'Creación de Subscripción'}
-          </Typography>
-          <Box sx={{ mb: 1, width: 120 }}></Box>
+            <Typography variant="h6" className={styles.modalTitle}>
+              {modalType === 'edit' ? 'Edición de Subscripción' : 'Creación de Subscripción'}
+            </Typography>
+            <Box sx={{ mb: 1, width: 120 }}></Box>
 
-          <TextField
-            fullWidth
-            label="Tipo"
-            name="type"
-            // className={styles.modalInput}
-            value={currentSubscription?.type || ''}
-            onChange={(e) => setCurrentSubscription({ ...currentSubscription ?? {id:0,type:''} , type: e.target.value })}
-            sx={inputStyles}
-          />
-          <Box className={styles.modalButtons}>
-            <Button variant="contained" color="primary" onClick={handleSaveSubscription}>
-              Guardar
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
-              Cancelar
-            </Button>
-          </Box>
-        </ConfirmDeleteModalPaper>
+            <TextField
+              fullWidth
+              label="Tipo"
+              name="type"
+              value={currentSubscription?.type || ''}
+              onChange={(e) => setCurrentSubscription({ ...currentSubscription ?? {id:0,type:''} , type: e.target.value })}
+              sx={inputStyles}
+            />
+            <Box className={styles.modalButtons}>
+              <Button variant="contained" color="primary" onClick={handleSaveSubscription}>
+                Guardar
+              </Button>
+              <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
+                Cancelar
+              </Button>
+            </Box>
+          </ConfirmDeleteModalPaper>
       </Modal>
     </Box>
   );
+
 };
 
 export default SubscriptionComponent;

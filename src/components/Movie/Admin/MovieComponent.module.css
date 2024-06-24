@@ -1,8 +1,8 @@
 /* MovieComponent.module.css */
 .container {
-  background-color: #000;
-  color: #fff;
   padding: 20px;
+  background-color: #141414; /* Fondo oscuro estilo Netflix */
+  color: white; /* Texto blanco */
 }
 
 .searchContainer {
@@ -71,6 +71,7 @@
   color: #fff;
   padding: 5px;
 }
+
 
 .ratingOverlay {
   position: absolute;

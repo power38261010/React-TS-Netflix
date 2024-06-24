@@ -52,7 +52,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #141414; /* Color oscuro estilo Netflix */
+  background-color: #362a2a; /* Color oscuro estilo Netflix */
   color: white; /* Texto blanco */
   padding: 16px;
   display: flex;

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Register.module.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { selectStyles } from '../Helpers';
 
 const RegisterForm: React.FC = () => {
   const { register, errorRegisterMsg, profile, token } = useAuth();
@@ -76,22 +78,26 @@ const RegisterForm: React.FC = () => {
             required
           />
         </div>
-        <div className={styles.inputGroup}>
-          <select
-            value={subscriptionId}
-            onChange={(e) => setSubscriptionId(Number(e.target.value))}
-            required
-          >
-            <option value={0}>Ninguno</option>
-            <option value={1}>Premium</option>
-            <option value={2}>Starter</option>
-          </select>
+        <div className={styles.genreSelectContainer}>
+        <FormControl variant="outlined" size='small' fullWidth sx={selectStyles}>
+            <InputLabel id="subscription-select-label">Subscripcion</InputLabel>
+            <Select
+              value={subscriptionId}
+              onChange={(e) => setSubscriptionId(Number(e.target.value))}
+              label="Subscripcion"
+              className={styles.selector}
+            >
+              <MenuItem key="Ninguno" value='0'><em>Ninguno</em></MenuItem>
+                <MenuItem key='starter' value='1'>Starter</MenuItem>
+                <MenuItem key='premium' value='2'>Premium</MenuItem>
+            </Select>
+          </FormControl>
         </div>
         <button className={styles.registerButton} type="submit">
           Registrar
         </button>
         <div className={styles.legenda}>
-          Prueba la cuenta Premium por 15 días, o Starter por 30, en caso de no optar ahora perderás la oportunidad!
+          Prueba la cuenta Premium por 15 días, o Starter por 30 días, en caso de no optar ahora perderás la oportunidad!
         </div>
       </form>
       <footer className={styles.footer}>
