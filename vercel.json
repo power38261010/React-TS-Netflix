@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://tu-backend-en-produccion.com/api/:path*"
+      "destination": "https://netflixarruabackend.azurewebsites.net/api/:path*"
     }
   ]
 }
