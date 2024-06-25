@@ -34,6 +34,7 @@ import {
 import { getAllSubscriptions } from '../../../app/slices';
 import { CardNumberParams } from '@mercadopago/sdk-react/secureFields/cardNumber/types';
 import { useAuth } from '../../../contexts/AuthContext';
+import {generatePaymentReceipt} from './generatePaymentReceipt'
 
 const PaymentComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,16 +87,38 @@ const PaymentComponent: React.FC = () => {
 
   const handleSubscriptionChange = (event: { target: { value: any } }) => {
     const { value } = event.target;
+    const waypay = waypaysub?.find(wp => wp.id === value);
+
+    let amountAux: number;
+    if (paymentData.isAnual) {
+      amountAux = waypay?.annualMultiplierPayment ? parseInt(waypay.annualMultiplierPayment.toString(), 10) : 1000;
+    } else {
+      amountAux = waypay?.monthlyPayment ? parseInt(waypay.monthlyPayment.toString(), 10) : 1000;
+    }
+
     setPaymentData((prevData) => ({
       ...prevData,
       payId: value,
+      amount: amountAux
     }));
   };
 
+
   const handleIsAnualChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    const waypay = waypaysub?.find(wp => wp.id === paymentData.payId);
+
+    let amountAux: number;
+    if (event?.target?.checked) {
+      amountAux = waypay?.annualMultiplierPayment ? parseInt(waypay.annualMultiplierPayment.toString(), 10) : 1000;
+    } else {
+      amountAux = waypay?.monthlyPayment ? parseInt(waypay.monthlyPayment.toString(), 10) : 1000;
+    }
+
     setPaymentData((prevData) => ({
       ...prevData,
       isAnual: event.target.checked,
+      amount:amountAux
     }));
   };
 
@@ -190,7 +213,7 @@ const PaymentComponent: React.FC = () => {
         let pm = await fetchPaymentMethods(bin) ?? '';
         let sub = nameSubscriptionSinceWP(paymentData.payId);
         let description = `Pago ${paymentData.isAnual ? 'anual' : 'mensual'} de la subscripcion ${sub}.`;
-
+        console.log('response payment', response)
         const updatedPaymentData = {
           ...paymentData,
           token: response.id,
@@ -224,6 +247,15 @@ const PaymentComponent: React.FC = () => {
           setPaymentSuccess(false);
           setloadingPay(false);
           refreshProfile();
+          generatePaymentReceipt ({
+            description : payresult?.description,
+            transactionAmount : payresult?.transactionAmount,
+            paymentMethodId : payresult?.paymentMethodId,
+            paymentTypeId : payresult?.paymentTypeId,
+            email :payresult?.payer?.email,
+            type :payresult?.payer?.identification?.type,
+            number : payresult?.payer?.identification?.number,
+          })
           setSnackbarMessage('¡Pago exitoso!');
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
