@@ -133,22 +133,24 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
           />
           <SearchIcon className={styles.searchIcon} onClick={handleSearch} />
         </div>
-        <div className={styles.genreSelectContainer}>
-          <FormControl variant="outlined" size='small' fullWidth sx={selectStyles}>
-            <InputLabel id="genre-select-label">Rol</InputLabel>
-            <Select
-              value={selectedSearchRole}
-              onChange={(e) => setSelectedSearchRole(e.target.value as string)}
-              label="Rol"
-              className={styles.selector}
-            >
-              <MenuItem key="Todos" selected={(selectedSearchRole === '')} value=""><em>Todos</em></MenuItem>
-              {roles.map((g) => (
-                <MenuItem key={g} value={g}>{g}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
+        { profile?.role === 'super_admin' && (
+          <div className={styles.genreSelectContainer}>
+            <FormControl variant="outlined" size='small' fullWidth sx={selectStyles}>
+              <InputLabel id="genre-select-label">Rol</InputLabel>
+              <Select
+                value={selectedSearchRole}
+                onChange={(e) => setSelectedSearchRole(e.target.value as string)}
+                label="Rol"
+                className={styles.selector}
+              >
+                <MenuItem key="Todos" selected={(selectedSearchRole === '')} value=""><em>Todos</em></MenuItem>
+                {roles.map((g) => (
+                  <MenuItem key={g} value={g}>{g}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        )}
         <div className={styles.genreSelectContainer}>
           <FormControl variant="outlined" size='small' fullWidth sx={selectStyles}>
             <InputLabel id="subscription-select-label">Abonados</InputLabel>
