@@ -1,7 +1,9 @@
 REACT_APP_API_KEY = "NetflixCloneAPI"
 baseUrlProd = ""
-REACT_APP_API_URL= "/api"
+REACT_APP_API_URL= "https://netflixarruabackend.azurewebsites.net/api"
 REACT_APP_API_AUD = "NetflixCloneClient"
-
+PUBLIC_KEY = "TEST-c7aba999-edd1-4f0c-a1fc-ec68886af860"
+MP_CARDS_TEST="https://www.mercadopago.com.ar/developers/es/docs/adobe-commerce/additional-content/your-integrations/test/cards"
 SSL_CRT_FILE=path/to/certfile
 SSL_KEY_FILE=path/to/keyfile
+TIME_TRANSITION_BEST_MOVIES=60
