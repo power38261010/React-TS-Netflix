@@ -7,6 +7,7 @@ import { getAll } from '../../app/slices/usersSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../app/store';
 import { VictoryPie, VictoryBar } from 'victory';
+import { Height } from '@mui/icons-material';
 
 const DashboardComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -93,27 +94,29 @@ const DashboardComponent: React.FC = () => {
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', marginTop: '20px' }}>
-        <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 , mr:40, }}>
-          <Typography variant="h5" align='center' sx={{ marginBottom: '10px' }}>Pagos de Subscripciones</Typography>
+        <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10, mr: 40 }}>
+          <Typography variant="h5" align='center' sx={{ marginBottom: '0px' }}>Pagos de Subscripciones</Typography>
           <VictoryPie
+            height={250}
             data={[
               { x: 'Anual', y: annualCount },
               { x: 'Mensual', y: monthlyCount }
             ]}
             colorScale={['#FF5733', '#3333FF']}
-            labelRadius={30}
+            labelRadius={15}
             style={{ labels: { fill: 'white', fontSize: 14, fontWeight: 'bold' } }}
             width={300} // Ajustar el tamaño del VictoryPie
           />
         </Box>
-        <Box sx={{ flexBasis: '20%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 }}>
-          <Typography variant="h5" align='center' sx={{ marginBottom: '10px' }}>Usuarios con Subscripciones</Typography>
+        <Box sx={{ flexBasis: '25%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px', mt: 10 }}>
+          <Typography variant="h5" align='center' sx={{ marginBottom: '0px' }}>Usuarios con Subscripciones</Typography>
           <VictoryBar
+            height={250}
             data={[
               { x: 'Started', y: startedSubscriptions.length },
               { x: 'Premium', y: premiumSubscriptions.length }
             ]}
-            style={{ data: { fill: '#33FFEC' }, labels: { fill: 'white', fontSize: 12 } }} // Ajuste del tamaño de la letra
+            style={{  data: { fill: '#33FFEC' }, labels: { fill: 'white', fontSize: 12 }} } // Ajuste del tamaño de la letra
             barWidth={30} // Reducción del ancho de la barra para mejorar la separación entre las barras
             cornerRadius={4}
             width={300} // Ajustar el tamaño del VictoryBar
@@ -123,6 +126,7 @@ const DashboardComponent: React.FC = () => {
           />
         </Box>
       </Box>
+
     </Box>
   );
 };

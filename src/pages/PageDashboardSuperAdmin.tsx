@@ -21,15 +21,15 @@ const UserAdminApp: React.FC = () => {
   return (
     <>
         <Box sx={{ bgcolor: '#141414', height: '100%' }}>
-          <Box sx={{ bgcolor: '#141414', padding: '20px', mb: 1}}>
+          <Box sx={{ bgcolor: '#141414', padding: '20px'}}>
             <DashboardComponent />
           </Box>
           <Box sx={{ bgcolor: '#141414', padding: '1px' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb:5}}>
-              <Box sx={{ flex: '0 0 61%', marginLeft: '2%', marginRight: '5%' }}>
+              <Box sx={{ flex: '0 0 51%', marginLeft: '2%', marginRight: '5%' }}>
                 <PayComponent />
               </Box>
-              <Box sx={{ flex: '0 0 30%', marginRight: '2%' }}>
+              <Box sx={{ flex: '0 0 40%', marginRight: '2%' }}>
                 <SubscriptionComponent />
               </Box>
             </Box>
