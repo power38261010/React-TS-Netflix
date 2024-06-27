@@ -29,6 +29,7 @@ const UserAdminApp: React.FC = () => {
               <Box sx={{ flex: '0 0 51%', marginLeft: '2%', marginRight: '5%' }}>
                 <PayComponent />
               </Box>
+
               <Box sx={{ flex: '0 0 40%', marginRight: '2%' }}>
                 <SubscriptionComponent />
               </Box>
