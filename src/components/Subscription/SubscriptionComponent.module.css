@@ -85,3 +85,11 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.confirmDeleteButtons {
+  margin-top: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

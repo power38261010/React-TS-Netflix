@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../app/store';
-import { getAllSubscriptions, createSubscription, updateSubscription } from '../../app/slices/subscriptionsSlice';
+import { getAllSubscriptions, createSubscription, updateSubscription, deleteSubscription } from '../../app/slices/subscriptionsSlice';
 import {
   Box,
   Button,
@@ -19,10 +19,29 @@ import {
   Snackbar,
   Alert
 } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Edit as EditIcon , Delete as DeleteIcon } from '@mui/icons-material';
 import styles from './SubscriptionComponent.module.css';
 import { Subscription } from '../../app/interfaces/Subscription';
 import { inputStyles } from '../Helpers';
+import styled from '@mui/styled-engine';
+
+// Estilos personalizados para el modal de confirmación
+const ConfirmDeleteModalPaper = styled(Paper)`
+  position: absolute;
+  width: 30vw;
+  height: 20vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #141414; /* Color oscuro estilo Netflix */
+  color: white; /* Texto blanco */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 
 interface SubscriptionManagerProps {
   subscriptions: Subscription[] | [];
@@ -34,9 +53,43 @@ const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscri
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit'>('create');
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
+  const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
+  const [deleteCandidateId, setDeleteCandidateId] = useState<number | null>(null);
+  // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const handleDeleteCandidate = (id: number) => {
+    setDeleteCandidateId(id);
+    setConfirmDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteCandidateId !== null) {
+      dispatch(deleteSubscription(deleteCandidateId))
+        .unwrap()
+        .then(() => {
+          setSnackbarSeverity('success');
+          setSnackbarMessage('Subscripcion eliminada correctamente');
+          setSnackbarOpen(true);
+        })
+        .catch((error) => {
+          setSnackbarSeverity('error');
+          setSnackbarMessage('Error al eliminar la Subscripcion');
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          setDeleteCandidateId(null);
+          setConfirmDeleteModalOpen(false);
+        });
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteCandidateId(null);
+    setConfirmDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
@@ -111,6 +164,9 @@ const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscri
                   <IconButton onClick={() => handleOpenModal(subscription)}>
                     <EditIcon style={{ color: 'white' }} />
                   </IconButton>
+                  <IconButton onClick={() => handleDeleteCandidate(subscription.id)}>
+                    <DeleteIcon style={{ color: 'red' }} />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -142,6 +198,30 @@ const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscri
               </Button>
             </Box>
           </Box>
+      </Modal>
+        {/* Confirmación de eliminación */}
+        <Modal
+        open={confirmDeleteModalOpen}
+        onClose={handleCancelDelete}
+        aria-labelledby="confirm-delete-modal"
+        aria-describedby="confirm-delete-modal-description"
+      >
+        <ConfirmDeleteModalPaper>
+          <Typography variant="h6" component="h2" gutterBottom>
+            Confirmar eliminación
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            ¿Está seguro que desea eliminar esta película?
+          </Typography>
+          <Box className={styles.confirmDeleteButtons}>
+            <Button variant="contained" color="primary" onClick={handleConfirmDelete} style={{ marginRight: '8px' }}>
+              Sí
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleCancelDelete}>
+              No
+            </Button>
+          </Box>
+        </ConfirmDeleteModalPaper>
       </Modal>
       {/* Snackbar para mostrar mensajes */}
         <Snackbar
