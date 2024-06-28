@@ -390,7 +390,7 @@ const PaymentComponent: React.FC = () => {
           sx={{ mt: 2 }}
         >
           {error && <Typography variant="h6" bgcolor="red">Error: {error}</Typography>}
-          {loadingPay ? <CircularProgress size={24} /> : 'Pagar'}
+          {loadingPay ? <CircularProgress size={24} style={{ color: 'white' }} /> : 'Pagar'}
         </Button>
       </Paper>
       <Snackbar

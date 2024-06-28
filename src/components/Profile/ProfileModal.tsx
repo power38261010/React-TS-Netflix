@@ -6,6 +6,9 @@ import {
   TextField,
   Typography,
   IconButton,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
@@ -31,6 +34,12 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
     passwordHash: '',
     passwordHashNew: '',
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setProfileState({
@@ -42,7 +51,6 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
     });
   }, [profile]);
 
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleEditClick = (field: boolean) => {
     setIsEditing(field);
@@ -67,10 +75,26 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
   }
 
   const handleUpdateProfile = () => {
-    updateProfile(profileState?.id, profileState);
+    setLoading(true)
+    updateProfile(profileState?.id, profileState)
+    .then(() => {
+      setSnackbarSeverity('success');
+      setSnackbarMessage('Perfil actualizado correctamente');
+      setSnackbarOpen(true);
+      setIsModalOpen(false);
+      setIsEditing(false);
+    })
+    .catch((error) => {
+      setSnackbarSeverity('error');
+      setSnackbarMessage(error.response.data.message);
+      setSnackbarOpen(true);
+    })
+    .finally(() => {
+      setTimeout(() => {
+        setLoading(false)
+      }, 6000);
+    });
 
-    setIsModalOpen(false);
-    setIsEditing(false);
   };
 
   const handleClose = () => {
@@ -217,10 +241,21 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ isModalOpen, setIsModal
         (
           <Box sx={{ display:'flex',justifyContent: 'center' }}>
             <Button variant="contained" color="primary" onClick={handleUpdateProfile}>
-              Actualizar Perfil
+              {loading ? <CircularProgress style={{color:'white'}} size={24} /> : 'Actualizar Perfil'}
             </Button>
           </Box>
         )}
+        {/* Snackbar para mostrar mensajes */}
+        <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={() => setSnackbarOpen(false)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
       </Box>
     </Modal>
   );

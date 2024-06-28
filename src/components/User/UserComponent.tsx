@@ -22,6 +22,7 @@ import {
   Snackbar,
   Alert,
   TextField,
+  CircularProgress,
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon, Search as SearchIcon } from '@mui/icons-material';
 import styles from './UserComponent.module.css';
@@ -37,7 +38,7 @@ interface ProfileManagerProps {
 
 const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions}) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { users } = useSelector((state: RootState) => state.users);
+  const { users, loading } = useSelector((state: RootState) => state.users);
 
   const [deleteCandidateId, setDeleteCandidateId] = useState<number | null>(null);
   const [upUserId, setUpUserId] = useState<number | null>(null);
@@ -229,28 +230,45 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{ (user.role === '' || user.role === null)  ?  'Eliminado' : user.role }</TableCell>
-                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.username ?? 'Sin username'}</TableCell>
-                <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.email ?? 'Sin email'}</TableCell>
-                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{user.isPaid ? 'Si' : 'No'}</TableCell>
-                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{subscriptions.find((s) => s.id === user.subscriptionId)?.type ?? 'Sin Subscripcion'}</TableCell>
-                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{  user?.expirationDate?.toString().split('T')[0].split('-').reverse().join('/')  ?? 'Sin Fecha'}</TableCell>
-                <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >
-                  { profile?.role === 'super_admin' && user?.role !== 'super_admin' && (
-                    <IconButton  onClick={() => handleUpUser(user.id)}>
-                      <EditIcon style={{ color: 'white' }} />
-                    </IconButton>
-                  )}
-                  { user?.role !== 'super_admin' && (
-                    <IconButton onClick={() => handleDeleteCandidate(user.id)}>
-                      <DeleteIcon style={{ color: 'red' }} />
-                    </IconButton>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+            {
+              loading ?
+              <>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height='40vh'
+              > <CircularProgress style={{ color: 'white' }} size={44} /> </Box>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              </>:
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{ (user.role === '' || user.role === null)  ?  'Eliminado' : user.role }</TableCell>
+                  <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.username ?? 'Sin username'}</TableCell>
+                  <TableCell align="center"  sx={{ color: user.role === 'client' ? 'white' : 'yellow' }} className={styles.cell} >{user.email ?? 'Sin email'}</TableCell>
+                  <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{user.isPaid ? 'Si' : 'No'}</TableCell>
+                  <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{subscriptions.find((s) => s.id === user.subscriptionId)?.type ?? 'Sin Subscripcion'}</TableCell>
+                  <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >{  user?.expirationDate?.toString().split('T')[0].split('-').reverse().join('/')  ?? 'Sin Fecha'}</TableCell>
+                  <TableCell align="center"  sx={{ color: 'white' }} className={styles.cell} >
+                    { profile?.role === 'super_admin' && user?.role !== 'super_admin' && (
+                      <IconButton  onClick={() => handleUpUser(user.id)}>
+                        <EditIcon style={{ color: 'white' }} />
+                      </IconButton>
+                    )}
+                    { user?.role !== 'super_admin' && (
+                      <IconButton onClick={() => handleDeleteCandidate(user.id)}>
+                        <DeleteIcon style={{ color: 'red' }} />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>

@@ -17,7 +17,8 @@ import {
   Typography,
   TextField,
   Snackbar,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { Edit as EditIcon , Delete as DeleteIcon } from '@mui/icons-material';
 import styles from './SubscriptionComponent.module.css';
@@ -45,9 +46,10 @@ const ConfirmDeleteModalPaper = styled(Paper)`
 
 interface SubscriptionManagerProps {
   subscriptions: Subscription[] | [];
+  loading: boolean;
 }
 
-const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscriptions}  ) => {
+const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscriptions , loading}  ) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -157,19 +159,35 @@ const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscri
             </TableRow>
           </TableHead>
           <TableBody>
-            {subscriptions.map((subscription) => (
-              <TableRow key={subscription.id}>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{subscription.type}</TableCell>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
-                  <IconButton onClick={() => handleOpenModal(subscription)}>
-                    <EditIcon style={{ color: 'white' }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteCandidate(subscription.id)}>
-                    <DeleteIcon style={{ color: 'red' }} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            { loading ?
+            <>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height='40vh'
+                > <CircularProgress style={{ color: 'white' }} size={44} /> </Box>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+            </>:
+              subscriptions.map((subscription) => (
+                <TableRow key={subscription.id}>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{subscription.type}</TableCell>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
+                    <IconButton onClick={() => handleOpenModal(subscription)}>
+                      <EditIcon style={{ color: 'white' }} />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteCandidate(subscription.id)}>
+                      <DeleteIcon style={{ color: 'red' }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>

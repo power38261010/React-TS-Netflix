@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Register.module.css';
 import { useAuth } from '../../contexts/AuthContext';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { selectStyles } from '../Helpers';
 
 const RegisterForm: React.FC = () => {
@@ -14,6 +14,7 @@ const RegisterForm: React.FC = () => {
   const [subscriptionId, setSubscriptionId] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   if (profile !== null && token !== null) {
     navigate('/pre-dashboard');
@@ -25,7 +26,7 @@ const RegisterForm: React.FC = () => {
       setErrorMessage('Las contraseñas no coinciden');
       return;
     }
-
+    setLoading(true)
     try {
       const isRegistered = await register(username, email, password, subscriptionId);
       if (isRegistered) {
@@ -33,6 +34,8 @@ const RegisterForm: React.FC = () => {
       }
     } catch (error : any ) {
       setErrorMessage(error.response.data.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -92,8 +95,8 @@ const RegisterForm: React.FC = () => {
             </Select>
           </FormControl>
         </div>
-        <button className={styles.registerButton} type="submit">
-          Registrar
+        <button className={styles.registerButton} type="submit" disabled={loading}>
+          {loading ? <CircularProgress size={24} style={{ color: 'white' }} /> : 'Registrar'}
         </button>
         <div className={styles.legenda}>
           Prueba la cuenta Premium por 15 días, o Starter por 30 días, en caso de no optar ahora perderás la oportunidad!

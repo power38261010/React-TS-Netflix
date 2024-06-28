@@ -25,7 +25,8 @@ import {
   FormControl,
   InputLabel,
   Snackbar,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { Delete as DeleteIcon, Edit as EditIcon, Search as SearchIcon } from '@mui/icons-material';
 import styles from './MovieComponent.module.css';
@@ -55,7 +56,7 @@ const ConfirmDeleteModalPaper = styled(Paper)`
 
 const MovieComponent: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { movies } = useSelector((state: RootState) => state.movies);
+  const { movies, loading } = useSelector((state: RootState) => state.movies);
   const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
 
   const [anyMovie, setAnyMovie] = useState<Movie>({
@@ -230,7 +231,22 @@ const MovieComponent: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {movies.map((movie) => (
+            { loading ?
+            <>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height='40vh'
+                > <CircularProgress style={{ color: 'white' }} size={44} /> </Box>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+              <TableCell ></TableCell>
+            </>:
+            movies.map((movie) => (
               <TableRow key={movie.id}>
                 <TableCell  align="center"  className={styles.cell}>
                   <img src={movie.posterUrl} alt={"Sin Imagen"} className={styles.poster} />
@@ -256,7 +272,8 @@ const MovieComponent: React.FC = () => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+            }
           </TableBody>
         </Table>
       </TableContainer>

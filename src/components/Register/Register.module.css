@@ -19,7 +19,7 @@ html, body {
 .register {
   display: flex;
   flex-direction: column;
-  height: auto;
+  height: 100vh;
   width: auto;
   background: url('../../assets/backgroundLanding.jpg') no-repeat center center/cover;
   color: white;

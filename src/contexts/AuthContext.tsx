@@ -100,9 +100,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error : any) {
       console.error(`Error updating user with ID ${id}:`, error);
-      return false;
+      throw error;
     }
   }
 

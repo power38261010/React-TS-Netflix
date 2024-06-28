@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { CircularProgress } from '@mui/material';
 
 const LoginForm: React.FC = () => {
   const { login, profile, token } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -17,13 +19,16 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true)
     try {
       const isAuthenticated = await login(username, password);
       if (isAuthenticated) {
         navigate('/pre-dashboard');
       }
-    } catch (error :any) {
+    } catch (error : any ) {
       setErrorMessage(error.response.data.message);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -50,8 +55,9 @@ const LoginForm: React.FC = () => {
             required
           />
         </div>
-        <button className={styles.loginButton} type="submit">
-          Iniciar Sesion
+        <button className={styles.loginButton} disabled={loading} type="submit">
+          {loading ? <CircularProgress size={24} style={{ color: 'white' }} /> : 'Iniciar Sesion'}
+
         </button>
         <div className={styles.extraLinks}>
  

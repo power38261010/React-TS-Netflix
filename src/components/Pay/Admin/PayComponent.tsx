@@ -21,7 +21,8 @@ import {
   Select,
   MenuItem,
   Snackbar,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import styles from './PayComponent.module.css';
@@ -33,9 +34,10 @@ import { getAllSubscriptions } from '../../../app/slices';
 interface PayManagerProps {
   subscriptions: Subscription[] | [];
   pays: Pay [] | [];
+  loading: boolean;
 }
 
-const PayComponent: React.FC  <PayManagerProps>   = ( { pays, subscriptions } ) => {
+const PayComponent: React.FC  <PayManagerProps>   = ( { pays, subscriptions, loading } ) => {
   const dispatch = useDispatch<AppDispatch>();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit'>('create');
@@ -160,20 +162,34 @@ const PayComponent: React.FC  <PayManagerProps>   = ( { pays, subscriptions } ) 
             </TableRow>
           </TableHead>
           <TableBody>
-            {pays.map((pay) => (
-              <TableRow key={pay.id}>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.currency}</TableCell>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.monthlyPayment}</TableCell>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
-                  {subscriptions.find((sub) => sub.id === pay.subscriptionId)?.type ?? 'Sin Subscripción'}
-                </TableCell>
-                <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
-                  <IconButton onClick={() => handleOpenModal(pay)}>
-                    <EditIcon style={{ color: 'white' }} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            { loading ?
+              <>
+                <TableCell ></TableCell>
+                <TableCell ></TableCell>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height='40vh'
+                  > <CircularProgress style={{ color: 'white' }} size={44} /> </Box>
+                <TableCell ></TableCell>
+                <TableCell ></TableCell>
+              </>:
+              pays.map((pay) => (
+                <TableRow key={pay.id}>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.currency}</TableCell>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>{pay.monthlyPayment}</TableCell>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
+                    {subscriptions.find((sub) => sub.id === pay.subscriptionId)?.type ?? 'Sin Subscripción'}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: 'white' }} className={styles.cell}>
+                    <IconButton onClick={() => handleOpenModal(pay)}>
+                      <EditIcon style={{ color: 'white' }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            }
           </TableBody>
         </Table>
       </TableContainer>

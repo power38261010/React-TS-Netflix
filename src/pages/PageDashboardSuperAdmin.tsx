@@ -10,8 +10,8 @@ import { getAll } from '../app/slices/usersSlice';
 
 const UserAdminApp: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
-  const { pays } = useSelector((state: RootState) => state.pays);
+  const { subscriptions , loading : loadingSub } = useSelector((state: RootState) => state.subscriptions);
+  const { pays, loading : loadingPay } = useSelector((state: RootState) => state.pays);
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
@@ -29,11 +29,11 @@ const UserAdminApp: React.FC = () => {
           <Box sx={{ bgcolor: '#141414', padding: '1px' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb:5}}>
               <Box sx={{ flex: '0 0 51%', marginLeft: '2%', marginRight: '5%' }}>
-                <PayComponent subscriptions= {subscriptions} pays= {pays} />
+                <PayComponent subscriptions= {subscriptions} pays= {pays} loading = {loadingPay} />
               </Box>
 
               <Box sx={{ flex: '0 0 40%', marginRight: '2%' }}>
-                <SubscriptionComponent subscriptions= {subscriptions} />
+                <SubscriptionComponent subscriptions = {subscriptions} loading = {loadingSub} />
               </Box>
             </Box>
           </Box>
