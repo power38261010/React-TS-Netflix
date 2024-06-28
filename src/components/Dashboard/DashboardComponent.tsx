@@ -79,15 +79,15 @@ const DashboardComponent: React.FC = () => {
       <Typography variant="h4" sx={{ marginBottom: '20px' }}>Dashboard de Estadísticas</Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 10 }}>
-        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '5px' }}>
           <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Venta Tipo Anual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${annualRevenue.toFixed(2)}</Typography>
         </Box>
-        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '5px' }}>
           <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Venta Tipo Mensual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${monthlyRevenue.toFixed(2)}</Typography>
         </Box>
-        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '20px' }}>
+        <Box sx={{ flexBasis: '30%', bgcolor: '#2C2C2C', borderRadius: '10px', padding: '5px' }}>
           <Typography align='center' variant="h5" sx={{ marginBottom: '10px' }}>Recaudación Total Anual</Typography>
           <Typography align='center' variant="h6" sx={{ fontWeight: 'bold', marginTop: '10px' }}>${totalYearlyRevenue.toFixed(2)}</Typography>
         </Box>

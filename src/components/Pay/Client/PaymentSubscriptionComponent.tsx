@@ -398,7 +398,7 @@ const PaymentComponent: React.FC = () => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%', color: 'white', background: 'black' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

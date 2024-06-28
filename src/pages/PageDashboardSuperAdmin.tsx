@@ -2,14 +2,16 @@ import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import SubscriptionComponent from '../components/Subscription/SubscriptionComponent';
 import PayComponent from '../components/Pay/Admin/PayComponent';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllPaymentSubscriptions, getAllPayments, getAllSubscriptions } from '../app/slices';
-import { AppDispatch } from '../app/store';
+import { AppDispatch, RootState } from '../app/store';
 import DashboardComponent from '../components/Dashboard/DashboardComponent';
 import { getAll } from '../app/slices/usersSlice';
 
 const UserAdminApp: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
+  const { pays } = useSelector((state: RootState) => state.pays);
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
@@ -27,11 +29,11 @@ const UserAdminApp: React.FC = () => {
           <Box sx={{ bgcolor: '#141414', padding: '1px' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb:5}}>
               <Box sx={{ flex: '0 0 51%', marginLeft: '2%', marginRight: '5%' }}>
-                <PayComponent />
+                <PayComponent subscriptions= {subscriptions} pays= {pays} />
               </Box>
 
               <Box sx={{ flex: '0 0 40%', marginRight: '2%' }}>
-                <SubscriptionComponent />
+                <SubscriptionComponent subscriptions= {subscriptions} />
               </Box>
             </Box>
           </Box>

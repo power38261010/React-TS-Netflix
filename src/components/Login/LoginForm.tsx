@@ -8,6 +8,8 @@ const LoginForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+
   const navigate = useNavigate();
 
   if (profile !== null && token !== null) {
@@ -21,9 +23,8 @@ const LoginForm: React.FC = () => {
       if (isAuthenticated) {
         navigate('/pre-dashboard');
       }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      setErrorMessage('El nombre de usuario o contraseña no coinciden con ningún usuario, vuelve a ingresarlos correctamente!'); // Actualizar el mensaje de error
+    } catch (error :any) {
+      setErrorMessage(error.response.data.message);
     }
   };
 

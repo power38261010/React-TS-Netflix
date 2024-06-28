@@ -6,7 +6,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { selectStyles } from '../Helpers';
 
 const RegisterForm: React.FC = () => {
-  const { register, errorRegisterMsg, profile, token } = useAuth();
+  const { register,  profile, token } = useAuth();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,9 +31,8 @@ const RegisterForm: React.FC = () => {
       if (isRegistered) {
         navigate('/pre-dashboard');
       }
-    } catch (error) {
-      console.error('Error al registrar:', error);
-      setErrorMessage(errorRegisterMsg || 'Error desconocido durante el registro');
+    } catch (error : any ) {
+      setErrorMessage(error.response.data.message);
     }
   };
 

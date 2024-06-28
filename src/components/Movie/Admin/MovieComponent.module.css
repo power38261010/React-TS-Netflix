@@ -126,3 +126,11 @@
   padding: 10px;
   color:#fff;
 }
+
+.confirmDeleteButtons {
+  margin-top: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

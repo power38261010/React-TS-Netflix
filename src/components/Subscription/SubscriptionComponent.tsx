@@ -15,41 +15,28 @@ import {
   TableHead,
   TableRow,
   Typography,
-  TextField
+  TextField,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import styles from './SubscriptionComponent.module.css';
 import { Subscription } from '../../app/interfaces/Subscription';
-import styled from '@mui/styled-engine';
 import { inputStyles } from '../Helpers';
 
-// interface SubscriptionManagerProps {
-//   subscriptions: Subscription[] | [];
-// }
+interface SubscriptionManagerProps {
+  subscriptions: Subscription[] | [];
+}
 
-const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {subscriptions} **/ ) => {
+const SubscriptionComponent: React.FC  <SubscriptionManagerProps>  = (  {subscriptions}  ) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit'>('create');
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
-
-  const ConfirmDeleteModalPaper = styled(Paper)`
-  position: absolute;
-  width: 30vw;
-  height: 22vh;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #141414;
-  color: white; /* Texto blanco */
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     dispatch(getAllSubscriptions());
@@ -73,13 +60,23 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
 
   const handleSaveSubscription = () => {
     if (currentSubscription) {
-      if (modalType === 'edit') {
-        dispatch(updateSubscription(currentSubscription));
-      } else {
-        dispatch(createSubscription(currentSubscription));
-      }
+      const action = modalType === 'edit' ? updateSubscription(currentSubscription) : createSubscription(currentSubscription)
+      dispatch(action)
+        .unwrap()
+        .then(() => {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(`Subscripcion ${modalType !== 'edit' ? "creada" : "actualizada"} correctamente`);
+          setSnackbarOpen(true);
+        })
+        .catch((error) => {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(`Error al ${modalType !== 'edit' ? "crear" : "actualizar"} la Subscripcion`);
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          handleCloseModal();
+        });
     }
-    handleCloseModal();
   };
 
   return (
@@ -146,6 +143,17 @@ const SubscriptionComponent: React.FC /* <SubscriptionManagerProps> **/ = ( /* {
             </Box>
           </Box>
       </Modal>
+      {/* Snackbar para mostrar mensajes */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
     </Box>
   );
 

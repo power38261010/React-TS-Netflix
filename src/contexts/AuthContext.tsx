@@ -29,7 +29,6 @@ interface AuthContextType {
   logout: () => void;
   isAuthenticated: () => boolean;
   verifyTokenInServer: () => Promise<boolean>;
-  errorRegisterMsg: any | null;
 }
 
 interface DecodedToken {
@@ -47,7 +46,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token') || null);
-  const [errorRegisterMsg, setErrorRegisterMsg] = useState<any | null>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -70,9 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error : any) {
       console.error('Error en login:', error);
-      return false;
+      throw error;
     }
   };
 
@@ -82,15 +80,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let { token } = response.data;
       let user = response.data.profile
       if ( verifySign(token) ) {
-        setErrorRegisterMsg(null)
         setCredentials (token,user)
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error : any) {
       console.error('Error al registrar usuario:', error);
-      setErrorRegisterMsg(error)
-      return false;
+      throw error;
     }
   };
 
@@ -174,7 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ profile, token, login, register, updateProfile, logout, isAuthenticated, verifyTokenInServer, refreshProfile, errorRegisterMsg }}>
+    <AuthContext.Provider value={{ profile, token, login, register, updateProfile, logout, isAuthenticated, verifyTokenInServer, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

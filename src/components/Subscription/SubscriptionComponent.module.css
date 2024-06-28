@@ -51,7 +51,7 @@
 .modal {
   position: absolute;
   width: 30vw;
-  height: 22vh;
+  height: 28vh;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

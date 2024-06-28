@@ -13,13 +13,14 @@ class MovieService {
     }
   }
 
-  async createMovie(movieData: any): Promise<boolean> {
+  async createMovie(movieData: any): Promise<Movie> {
     try {
-      await api.post('/movies', movieData);
-      return true;
+      const movie = await api.post<Movie>('/movies', movieData);
+      console.log('m ', movie)
+      return movie.data;
     } catch (error) {
       console.error('Error creating movie:', error);
-      return false;
+      throw error;
     }
   }
 

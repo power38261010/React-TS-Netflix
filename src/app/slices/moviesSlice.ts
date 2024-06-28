@@ -8,8 +8,7 @@ interface RateMovie {
 }
 
 export const createMovie = createAsyncThunk('movies/createMovie', async (movie: Movie) => {
-  await movieService.createMovie(movie);
-  return movie;
+  return await movieService.createMovie(movie);
 });
 
 export const updateMovie = createAsyncThunk('movies/updateMovie', async (movie: Movie) => {
@@ -176,9 +175,7 @@ const moviesSlice = createSlice({
         state.loading = false;
         const index = state.movies.findIndex(movie => movie.id === action.payload.id);
         if (index !== -1) {
-          // let rating = state.movies[index].rating ?? 7.5:
-          // movie = state.movies[index]
-          state.movies[index].rating = state.movies[index].rating ?? 7.5 +0.01;
+          state.movies[index].rating = state.movies[index].rating ?? 7.2 +0.01;
         }
       })
       .addCase(rateMovie.rejected, handleRejected)

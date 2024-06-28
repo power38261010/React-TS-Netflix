@@ -39,7 +39,7 @@ import styled from '@mui/styled-engine';
 const ConfirmDeleteModalPaper = styled(Paper)`
   position: absolute;
   width: 30vw;
-  height: 15vh;
+  height: 20vh;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -74,7 +74,7 @@ const MovieComponent: React.FC = () => {
   const [genre, setGenre] = useState('');
   const [subscriptionType, setSubscriptionType] = useState<number | undefined>(undefined);
   const [pageIndex, setPageIndex] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(10);
   const [isCreate, setIsCreate] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
@@ -307,7 +307,7 @@ const MovieComponent: React.FC = () => {
         onClose={() => setSnackbarOpen(false)}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

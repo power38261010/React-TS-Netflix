@@ -19,20 +19,24 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
 import styles from './PayComponent.module.css';
 import { Pay } from '../../../app/interfaces/Pay';
 import { Subscription } from '../../../app/interfaces/Subscription';
-import styled from '@mui/styled-engine';
 import { inputStyles, selectStyles } from '../../Helpers';
 import { getAllSubscriptions } from '../../../app/slices';
 
-const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptions } **/) => {
+interface PayManagerProps {
+  subscriptions: Subscription[] | [];
+  pays: Pay [] | [];
+}
+
+const PayComponent: React.FC  <PayManagerProps>   = ( { pays, subscriptions } ) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { subscriptions } = useSelector((state: RootState) => state.subscriptions);
-  const { pays } = useSelector((state: RootState) => state.pays);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'create' | 'edit'>('create');
   const [currentPay, setCurrentPay] = useState<Pay>({
@@ -41,6 +45,9 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
     monthlyPayment: 0,
     subscriptionId: 1
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     dispatch(getAllPayments());
@@ -62,6 +69,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
     }
     setModalOpen(true);
   };
+
   const handleSubscriptionChange = (event: any) => {
     const {
       target: { value },
@@ -71,6 +79,7 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
       subscriptionId: parseInt(value as string)
     }));
   }
+
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target;
     setCurrentPay((prevPay) => ({
@@ -92,12 +101,37 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
   const handleSavePay = () => {
     if (currentPay) {
       if (modalType === 'edit') {
-        dispatch(updatePay({ id: currentPay.id ?? 0, pay: currentPay }));
+        dispatch(updatePay({ id: currentPay.id ?? 0, pay: currentPay }))
+        .then(() => {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(`Pago actualizado correctamente`);
+          setSnackbarOpen(true);
+        })
+        .catch((error) => {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(`Error al actualizar el Pago`);
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          handleCloseModal();
+        });
       } else {
-        dispatch(createPay(currentPay));
+        dispatch(createPay(currentPay))
+        .then(() => {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(`Pago creado correctamente`);
+          setSnackbarOpen(true);
+        })
+        .catch((error) => {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(`Error al crear el Pago`);
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          handleCloseModal();
+        });
       }
     }
-    handleCloseModal();
   };
 
   return (
@@ -197,6 +231,16 @@ const PayComponent: React.FC /* <PayManagerProps>  **/ = (/* { pays, subscriptio
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

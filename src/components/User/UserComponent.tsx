@@ -48,6 +48,9 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
   const [subscriptionType, setSubscriptionType] = useState<string >('');
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize] = useState(10);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     handleSearch();
@@ -65,8 +68,21 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
 
   const handleConfirmDelete = () => {
     if (deleteCandidateId !== null) {
-      dispatch(softDeleteUser(deleteCandidateId));
-      setDeleteCandidateId(null);
+      dispatch(softDeleteUser(deleteCandidateId))
+      .unwrap()
+      .then(() => {
+        setSnackbarSeverity('success');
+        setSnackbarMessage(`Usuario borrado correctamente`);
+        setSnackbarOpen(true);
+      })
+      .catch((error) => {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(`Error al borrar un Usuario`);
+        setSnackbarOpen(true);
+      })
+      .finally(() => {
+        setDeleteCandidateId(null);
+      });
     }
   };
 
@@ -76,9 +92,24 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
 
   const handleConfirmUpUser = () => {
     if (upUserId !== null && selectedRole !== '') {
-      dispatch(upUser({ id: upUserId, role: selectedRole }));
-      setUpUserId(null);
-      setSelectedRole('');
+      dispatch(upUser({ id: upUserId, role: selectedRole }))
+      .unwrap()
+      .then(() => {
+        
+        setSnackbarSeverity('success');
+        setSnackbarMessage(`Usuario modificado correctamente`);
+        setSnackbarOpen(true);
+      })
+      .catch((error) => {
+        setSnackbarSeverity('error');
+        setSnackbarMessage(`Error al modificar un Usuario`);
+        setSnackbarOpen(true);
+      })
+      .finally(() => {
+        setUpUserId(null);
+        setSelectedRole('');
+      });
+ 
     }
   };
 
@@ -288,6 +319,17 @@ const UserComponent: React.FC <ProfileManagerProps>= ({profile,  subscriptions})
           </Box>
         </ConfirmDeleteModalPaper>
       </Modal>
+      {/* Snackbar para mostrar mensajes */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
     </Box>
   );

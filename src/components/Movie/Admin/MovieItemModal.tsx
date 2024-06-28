@@ -9,7 +9,10 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel
+  InputLabel,
+  Snackbar,
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import YouTube from 'react-youtube';
@@ -52,6 +55,35 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
 
   const [videoError, setVideoError] = useState(false);
   const playerRef = useRef<any>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loadingPay, setloadingPay] = useState(false);
+
+  const handleConfirm = () => {
+    if (isCreate !== null) {
+      setloadingPay(true);
+      const action = isCreate ? createMovie(stateMovie) : updateMovie(stateMovie);
+      dispatch(action)
+        .unwrap()
+        .then(() => {
+          setSnackbarSeverity('success');
+          setSnackbarMessage(`Película ${isCreate ? "creada" : "actualizada"} correctamente`);
+          setSnackbarOpen(true);
+        })
+        .catch((error) => {
+          setSnackbarSeverity('error');
+          setSnackbarMessage(`Error al ${isCreate ? "crear" : "actualizar"} la película`);
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            setloadingPay(false);
+            setOpenModal(false);
+          }, 6000);
+        });
+    }
+  };
 
   const videoId = stateMovie?.trailerUrl?.split('v=')[1]?.split('&')[0];
 
@@ -254,11 +286,22 @@ const MovieItemModal: React.FC<MovieItemModalProps> = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={isCreate ? handleCreateMovie : handleUpdateMovie}
+            onClick={handleConfirm}
           >
-            {isCreate ? 'Crear' : 'Actualizar'}
+          {loadingPay ? <CircularProgress style={{color:'white'}} size={24} /> : isCreate ? 'Crear' : 'Actualizar'}
           </Button>
         </Box>
+        {/* Snackbar para mostrar mensajes */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: '100%' , color: 'white', background: 'black'}}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       </Box>
     </Modal>
   );
