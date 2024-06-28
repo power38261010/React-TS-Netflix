@@ -9,7 +9,6 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-
   const navigate = useNavigate();
 
   if (profile !== null && token !== null) {

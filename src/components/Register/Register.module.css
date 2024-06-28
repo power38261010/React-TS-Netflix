@@ -1,3 +1,9 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .error {
   color: red;
   margin-bottom: 15px;
@@ -13,7 +19,8 @@
 .register {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: auto;
+  width: auto;
   background: url('../../assets/backgroundLanding.jpg') no-repeat center center/cover;
   color: white;
   justify-content: center;
@@ -27,7 +34,7 @@
   width: 100%;
   max-width: 300px;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 15vh;
   margin-bottom: 20px;
 }
 
