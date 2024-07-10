@@ -65,7 +65,7 @@ const PayComponent: React.FC  <PayManagerProps>   = ( { pays, subscriptions, loa
         id: 0,
         currency: '',
         monthlyPayment: 0,
-        subscriptionId: 0
+        subscriptionId: 1
       });
       setModalType('create');
     }
