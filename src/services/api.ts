@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
 
-const BASE_URL = process.env.REACT_APP_API_URL ?? 'https://netflix-arrua-server-gmbvehhch6ekgxfd.northeurope-01.azurewebsites.net/api';
+const BASE_URL = process.env.REACT_APP_API_URL ?? 'https://localhost:7054/api';
 
 
 const api = axios.create({
